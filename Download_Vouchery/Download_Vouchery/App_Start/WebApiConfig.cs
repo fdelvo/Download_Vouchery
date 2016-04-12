@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace Download_Vouchery
 {
@@ -13,6 +14,27 @@ namespace Download_Vouchery
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+            "PostBlobUpload",
+            "blobs/upload",
+            new { controller = "Blobs", action = "PostBlobUpload" },
+            new { httpMethod = new HttpMethodConstraint("POST") }
+        );
+
+            config.Routes.MapHttpRoute(
+                "GetBlobDownload",
+                "blobs/{blobId}/{voucherId}/download",
+                new { controller = "Blobs", action = "GetBlobDownload" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "PostVouchers",
+                "voucher/new/{voucherAmount}/{voucherFileId}",
+                new { controller = "Vouchers", action = "PostVoucher" },
+                new { httpMethod = new HttpMethodConstraint("POST") }
+            );
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

@@ -74,14 +74,14 @@ namespace Download_Vouchery.Controllers
 
         // POST: api/Vouchers
         [ResponseType(typeof(Voucher))]
-        public async Task<IHttpActionResult> PostVoucher(VoucherViewModel voucherVM)
+        public async Task<IHttpActionResult> PostVoucher(VoucherViewModel vm, string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            for (int i = 0; i < voucherVM.VoucherAmount; i++) { 
+            for (int i = 0; i < vm.VoucherAmount; i++) { 
                 var voucher = new Voucher();
 
                 voucher.VoucherId = Guid.NewGuid();
@@ -89,7 +89,7 @@ namespace Download_Vouchery.Controllers
                 voucher.VoucherCreationDate = DateTime.Now;
                 voucher.VoucherRedeemed = false;
                 voucher.VoucherRedemptionDate = null;
-                voucher.VoucherFilePath = voucherVM.VoucherFilePath;
+                voucher.VoucherFileId = db.BlobUploadModels.Find(new Guid(id));
 
                 db.Vouchers.Add(voucher);
                        

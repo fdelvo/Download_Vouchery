@@ -12,8 +12,10 @@ namespace Download_Vouchery
                         "~/Scripts/Angular/Core/angular.js",
                         "~/Scripts/Angular/Core/angular-resource.js",
                         "~/Scripts/Angular/DownloadVoucheryApp.js",
+                        "~/Scripts/Angular/Factories/FileFactory.js",
+                        "~/Scripts/Angular/Factories/UploadFactory.js",
                         "~/Scripts/Angular/Factories/VoucherFactory.js",
-                        "~/Scripts/Angular/Controllers/VoucherController.js"
+                        "~/Scripts/Angular/Controllers/FileController.js"
                         ));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

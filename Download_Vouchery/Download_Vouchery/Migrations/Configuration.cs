@@ -17,11 +17,11 @@ namespace Download_Vouchery.Migrations
         {
             context.Vouchers.AddOrUpdate(
                 v => v.VoucherId,
-                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "ABC123", VoucherCreationDate = DateTime.Now, VoucherFilePath = "Testpath", VoucherRedeemed = false },
-                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "DEF456", VoucherCreationDate = DateTime.Now, VoucherFilePath = "Testpath", VoucherRedeemed = false },
-                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "GHI789", VoucherCreationDate = DateTime.Now, VoucherFilePath = "Testpath", VoucherRedeemed = false },
-                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "JKL123", VoucherCreationDate = DateTime.Now, VoucherFilePath = "Testpath", VoucherRedeemed = false },
-                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "MNO456", VoucherCreationDate = DateTime.Now, VoucherFilePath = "Testpath", VoucherRedeemed = false }
+                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "ABC123", VoucherCreationDate = DateTime.Now, VoucherFileId = context.BlobUploadModels.Find(new Guid("1afc7d8c-cba7-4917-9a57-3ed7bd71e4a7")), VoucherRedeemed = false },
+                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "DEF456", VoucherCreationDate = DateTime.Now, VoucherFileId = context.BlobUploadModels.Find(new Guid("1afc7d8c-cba7-4917-9a57-3ed7bd71e4a7")), VoucherRedeemed = false },
+                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "GHI789", VoucherCreationDate = DateTime.Now, VoucherFileId = context.BlobUploadModels.Find(new Guid("1afc7d8c-cba7-4917-9a57-3ed7bd71e4a7")), VoucherRedeemed = false },
+                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "JKL123", VoucherCreationDate = DateTime.Now, VoucherFileId = context.BlobUploadModels.Find(new Guid("1afc7d8c-cba7-4917-9a57-3ed7bd71e4a7")), VoucherRedeemed = false },
+                new Voucher { VoucherId = Guid.NewGuid(), VoucherCode = "MNO456", VoucherCreationDate = DateTime.Now, VoucherFileId = context.BlobUploadModels.Find(new Guid("1afc7d8c-cba7-4917-9a57-3ed7bd71e4a7")), VoucherRedeemed = false }
                 );
             //  This method will be called after migrating to the latest version.
 

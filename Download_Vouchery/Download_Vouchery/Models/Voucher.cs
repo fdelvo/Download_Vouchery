@@ -15,7 +15,7 @@ namespace Download_Vouchery.Models
         [Required]
         public bool VoucherRedeemed { get; set; }
         [Required]
-        public string VoucherFilePath { get; set; }
+        public virtual BlobUploadModel VoucherFileId { get; set; }
         [Required]
         public DateTime VoucherCreationDate { get; set; }
         public DateTime? VoucherRedemptionDate { get; set; }

@@ -31,5 +31,7 @@ namespace Download_Vouchery.Models
         }
 
         public DbSet<Download_Vouchery.Models.Voucher> Vouchers { get; set; }
+        public DbSet<Download_Vouchery.Models.BlobUploadModel> BlobUploadModels { get; set; }
+        public DbSet<Download_Vouchery.Models.BlobDownloadModel> BlobDownloadModels { get; set; }
     }
 }
