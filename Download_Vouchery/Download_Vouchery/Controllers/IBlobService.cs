@@ -1,4 +1,6 @@
 ﻿using Download_Vouchery.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Download_Vouchery.Controllers
 {
@@ -16,13 +19,21 @@ namespace Download_Vouchery.Controllers
         Task<BlobDownloadModel> DownloadBlob(Guid blobId);
     }
 
-    public class BlobService : IBlobService
+    public class BlobService : ApiController, IBlobService
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public UserManager<ApplicationUser> UserManager()
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            return manager;
+        }
 
         public async Task<List<BlobUploadModel>> UploadBlobs(HttpContent httpContent)
         {
             var blobUploadProvider = new BlobStorageUploadProvider();
+
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
             var list = await httpContent.ReadAsMultipartAsync(blobUploadProvider)
                 .ContinueWith(task =>
@@ -39,6 +50,7 @@ namespace Download_Vouchery.Controllers
             foreach (var item in list)
             {
                 item.FileId = Guid.NewGuid();
+                item.FileOwner = currentUser;
                 db.BlobUploadModels.Add(item);
                 try
                 {

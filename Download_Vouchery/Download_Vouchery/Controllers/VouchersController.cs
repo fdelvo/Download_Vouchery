@@ -81,7 +81,7 @@ namespace Download_Vouchery.Controllers
                 return BadRequest(ModelState);
             }
 
-            for (int i = 0; i < vm.VoucherAmount; i++) { 
+            for (int i = 0; i < vm.VoucherAmount; i++) {
                 var voucher = new Voucher();
 
                 voucher.VoucherId = Guid.NewGuid();
@@ -92,23 +92,16 @@ namespace Download_Vouchery.Controllers
                 voucher.VoucherFileId = db.BlobUploadModels.Find(new Guid(id));
 
                 db.Vouchers.Add(voucher);
-                       
-            
-                try
-                {
-                    await db.SaveChangesAsync();
-                }
-                catch (DbUpdateException)
-                {
-                    if (VoucherExists(voucher.VoucherId))
-                    {
-                        return Conflict();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+            }
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
             }
 
             return StatusCode(HttpStatusCode.Created);
