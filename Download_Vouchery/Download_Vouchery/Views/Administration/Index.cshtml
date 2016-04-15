@@ -22,11 +22,11 @@
             </ul>
         </div>
     </div>
-    <form role="form" ng-submit="CreateVoucher()">
-        <input type="text" ng-model="newVoucher.VoucherFilePath" />
-        <input type="number" ng-model="newVoucher.VoucherAmount" />
-        <input type="submit" value="Create Voucher" />
-    </form>
+    <div ng-init="GetVouchers()">
+        <ul>
+            <li ng-repeat="v in vouchers track by v.VoucherId">Code: {{v.VoucherCode}}, creation date: {{v.VoucherCreationDate}}, redeemed: {{v.VoucherRedeemed}}, redemption date: {{v.VoucherRedemptionDate}}</li>
+        </ul>
+    </div>
 
     <form role="form" ng-submit="uploadFile()">
         <input type="file" name="file1" file-model="myFile" />

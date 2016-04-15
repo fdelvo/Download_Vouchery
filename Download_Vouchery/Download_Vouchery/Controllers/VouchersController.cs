@@ -11,6 +11,8 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Download_Vouchery.Models;
 using Download_Vouchery.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Download_Vouchery.Controllers
 {
@@ -18,10 +20,17 @@ namespace Download_Vouchery.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public UserManager<ApplicationUser> UserManager()
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            return manager;
+        }
+
         // GET: api/Vouchers
         public IQueryable<Voucher> GetVouchers()
         {
-            return db.Vouchers;
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
+            return db.Vouchers.Include(fi => fi.VoucherFileId).Include(u => u.VoucherFileId.FileOwner).Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id);
         }
 
         // GET: api/Vouchers/5
