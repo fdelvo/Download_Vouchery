@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +10,8 @@ namespace Download_Vouchery.Models
     public class Voucher
     {
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid VoucherId { get; set; }
         [Required]
         public string VoucherCode { get; set; }
