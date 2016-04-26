@@ -153,7 +153,7 @@ namespace Download_Vouchery.Controllers
                 voucher.VoucherCode = voucher.VoucherId.ToString().Substring(0,8);
                 voucher.VoucherCreationDate = DateTime.Now;
                 voucher.VoucherRedeemed = false;
-                voucher.VoucherRedemptionDate = DateTime.Now;
+                voucher.VoucherRedemptionDate = null;
                 voucher.VoucherFileId_FileId = voucherFile.FileId;
 
                 temp.AddFirst(voucher);

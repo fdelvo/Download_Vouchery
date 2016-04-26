@@ -3,17 +3,22 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 <div ng-app="DownloadVoucheryApp" ng-controller="FileController">
-    <div ng-init="GetFiles()">
+    <div class="file-upload card">
+        <form role="form" ng-submit="uploadFile()">
+            <input type="file" name="file1" file-model="myFile" />
+            <input type="submit" value="Upload" />
+        </form>
+    </div>
+    <div class="file-overview card" ng-init="GetFiles()">
         <div ng-repeat="f in files track by f.FileId">
             <ul>
-                <li>{{f.FileId}}</li>
-                <li>{{f.FileName}}</li>
+                <li><a href="" ng-click="FilterVouchers(f.FileId)">{{f.FileName}}</a></li>
                 <li>{{f.FileUrl}}</li>
                 <li>{{f.FileSizeInBytes}}</li>
                 <li>{{f.FileOwner.UserName}}</li>
-                <li>
+                <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
+                <li ng-show="newVoucherForm">
                     <form role="form" ng-submit="CreateVoucher(f.FileId)">
                         <input type="number" ng-model="newVoucher.VoucherAmount" />
                         <input type="submit" value="Create Voucher" />
@@ -22,15 +27,48 @@
             </ul>
         </div>
     </div>
-    <div ng-init="GetVouchers()">
-        <ul>
-            <li ng-repeat="v in vouchers track by v.VoucherId">Code: {{v.VoucherCode}}, creation date: {{v.VoucherCreationDate}}, redeemed: {{v.VoucherRedeemed}}, redemption date: {{v.VoucherRedemptionDate}}</li>
-        </ul>
-    </div>
+    <div class="file-options card" ng-init="GetVouchers()">
+        <table class="voucher-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Creation Date</th>
+                    <th>Redeemed</th>
+                    <th>Redemption Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="v in pagedItems[currentPage] track by v.VoucherId | orderBy:sort.sortingOrder:sort.reverse">
+                    <td>{{v.VoucherCode}}</td>
+                    <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                    <td>{{v.VoucherRedeemed}}</td>
+                    <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <div class="pagination pull-right">
+                            <ul>
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="" ng-click="prevPage()">« Prev</a>
+                                </li>
 
-    <form role="form" ng-submit="uploadFile()">
-        <input type="file" name="file1" file-model="myFile" />
-        <input type="submit" value="Upload" />
-    </form>
+                                <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                    ng-class="{active: n == currentPage}"
+                                    ng-click="setPage()">
+                                    <a href="" ng-bind="n + 1">1</a>
+                                </li>
+
+                                <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                    <a href="" ng-click="nextPage()">Next »</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
 
