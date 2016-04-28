@@ -9,6 +9,7 @@
         })
 
         .success(function () {
+            window.location.reload();
         })
 
         .error(function () {

@@ -13,7 +13,7 @@
     <div class="file-overview card" ng-init="GetFiles()">
         <div ng-repeat="f in files track by f.FileId">
             <ul>
-                <li><a href="" ng-click="FilterVouchers(f.FileId)">{{f.FileName}}</a></li>
+                <li><a href="" ng-click="FilterVouchers(f.FileId); ShowVoucherOptions(f.FileName)">{{f.FileName}}</a></li>
                 <li>{{f.FileUrl}}</li>
                 <li>{{f.FileSizeInBytes}}</li>
                 <li>{{f.FileOwner.UserName}}</li>
@@ -27,9 +27,15 @@
             </ul>
         </div>
     </div>
-    <div class="file-options card" ng-init="GetVouchers()">
+    <div class="file-options card" ng-show="voucherOptions" ng-init="GetVouchers()">
+        <h2>Vouchers for {{fileName}}</h2>
         <table class="voucher-table">
             <thead>
+                <tr>
+                    <th>Amount: {{voucherAmount}}</th>
+                    <th>Redeemed: {{voucherAmountRedeemed}}</th>
+                    <th>Not redeemed: {{voucherAmountNotRedeemed}}</th>
+                </tr>
                 <tr>
                     <th>Code</th>
                     <th>Creation Date</th>
@@ -47,8 +53,8 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6">
-                        <div class="pagination pull-right">
+                    <td colspan="4">
+                        <div class="pagination">
                             <ul>
                                 <li ng-class="{disabled: currentPage == 0}">
                                     <a href="" ng-click="prevPage()">« Prev</a>
@@ -70,5 +76,9 @@
             </tfoot>
         </table>
     </div>
+    <div id="loaderDiv" ng-show="showLoader" loader>
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
+    </div>
 </div>
+
 

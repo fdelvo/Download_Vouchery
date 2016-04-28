@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Download_Vouchery.Models;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System.Configuration;
 
 namespace Download_Vouchery.Controllers
 {
@@ -155,8 +158,23 @@ namespace Download_Vouchery.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // Retrieve storage account from connection string.
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                        ConfigurationManager.AppSettings["BlobStorageConnectionString"]);
+
+                    // Create the blob client.
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+                    // Retrieve a reference to a container.
+                    CloudBlobContainer container = blobClient.GetContainerReference(user.Id.ToString());
+
+                    // Create the container if it doesn't already exist.
+                    container.CreateIfNotExists();
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
+
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

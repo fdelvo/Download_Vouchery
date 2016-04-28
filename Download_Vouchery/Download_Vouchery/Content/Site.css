@@ -70,3 +70,65 @@ nav {
 .voucher-table tr td, .voucher-table tr th {
     padding: 0.5rem;
 }
+
+.pagination {
+    float: right;
+}
+
+.pagination ul {
+    margin: 0;
+    padding: 0;
+}
+
+.pagination ul li {
+    display: inline;
+}
+
+.pagination ul li  a {
+    color: black;
+    text-decoration: none;
+    padding: 0.4rem 0.7rem;
+    border: solid #F7CA18 0.1rem;
+    border-right-width: 0.001rem;
+    border-left-width: 0.001rem;
+    float: left;
+}
+
+.pagination ul li:first-child  a {
+    color: black;
+    text-decoration: none;
+    border-left-width: 0.1rem;
+    float: left;
+}
+
+.pagination ul li:last-child  a {
+    color: black;
+    text-decoration: none;
+    border-right-width: 0.1rem;
+    float: left;
+}
+
+.active a {
+    color: #671AA6 !important;
+    border-color: #671AA6 !important;
+}
+
+#loaderDiv {
+   position: fixed;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   z-index: 1100;
+   background-color: white;
+   opacity: .6;
+}
+
+.ajax-loader {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   margin-left: -32px; /* -1 * image width / 2 */
+   margin-top: -32px; /* -1 * image height / 2 */
+   display: block;
+}

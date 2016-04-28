@@ -11,9 +11,12 @@ namespace Download_Vouchery
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/Angular/Core/angular.js",
                         "~/Scripts/Angular/Core/angular-resource.js",
+                        "~/Scripts/Angular/Core/angular-route.js",
                         "~/Scripts/Angular/DownloadVoucheryApp.js",
                         "~/Scripts/Angular/Factories/FileFactory.js",
                         "~/Scripts/Angular/Factories/UploadFactory.js",
+                        "~/Scripts/Angular/Factories/InterceptorFactory.js",
+                        "~/Scripts/Angular/Directives/InterceptorDirective.js",
                         "~/Scripts/Angular/Factories/VoucherFactory.js",
                         "~/Scripts/Angular/Controllers/FileController.js"
                         ));

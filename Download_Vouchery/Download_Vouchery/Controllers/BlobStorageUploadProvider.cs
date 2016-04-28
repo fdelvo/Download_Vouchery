@@ -30,7 +30,7 @@ namespace Download_Vouchery.Controllers
                 var fileName = Path.GetFileName(fileData.Headers.ContentDisposition.FileName.Trim('"'));
 
                 // Retrieve reference to a blob
-                var blobContainer = BlobHelper.GetBlobContainer();
+                var blobContainer = new BlobHelper().GetBlobContainer();
                 var blob = blobContainer.GetBlockBlobReference(fileName);
 
                 // Set the blob content type

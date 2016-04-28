@@ -1,24 +1,42 @@
-﻿angular.module('DownloadVoucheryApp').controller('FileController', ['$scope', '$filter', 'FileFactory', 'UploadFactory', 'VoucherFactory', function ($scope, $filter, FileFactory, UploadFactory, VoucherFactory) {
+﻿angular.module('DownloadVoucheryApp').controller('FileController', ['$scope', '$filter', '$route', 'FileFactory', 'UploadFactory', 'VoucherFactory', function ($scope, $filter, $route, FileFactory, UploadFactory, VoucherFactory) {
     $scope.files = [];
     $scope.vouchersRaw = [];
     $scope.vouchers = [];
     $scope.newVoucher = new VoucherFactory();
+    $scope.voucherOptions = false;
+    $scope.fileName = "";
+    $scope.voucherAmount = 0;
+    $scope.voucherAmountRedeemed = 0;
+    $scope.voucherAmountNotRedeemed = 0;
 
     $scope.CreateVoucher = function (fileId) {
-        $scope.newVoucher.$save({ id: fileId });
+        $scope.newVoucher.$save({ id: fileId }, function () { window.location.reload(); });
     }
 
     $scope.GetVouchers = function () {
         $scope.vouchersRaw = VoucherFactory.query();
     }
 
+    $scope.ShowVoucherOptions = function (fileName) {
+        $scope.voucherOptions = true;
+        $scope.fileName = fileName;
+    }
+
     $scope.FilterVouchers = function (fileId) {
         $scope.vouchers = [];
+        $scope.voucherAmountRedeemed = 0;
+        $scope.voucherAmountNotRedeemed = 0;
         $scope.vouchersRaw.filter(function (item) {
             if (item.VoucherFileId.FileId === fileId) {
+                if (item.VoucherRedeemed === true) {
+                    $scope.voucherAmountRedeemed++;
+                } else {
+                    $scope.voucherAmountNotRedeemed++;
+                }
                 $scope.vouchers.push(item);
             }
         });
+        $scope.voucherAmount = $scope.vouchers.length;
         $scope.search();
     }
 
@@ -37,15 +55,15 @@
     };
 
     $scope.sort = {
-        sortingOrder: 'id',
-        reverse: false
+        sortingOrder: 'VoucherCreationDate',
+        reverse: true
     };
 
-    $scope.gap = 10;
+    $scope.gap = 5;
 
     $scope.filteredItems = [];
     $scope.groupedItems = [];
-    $scope.itemsPerPage = 5;
+    $scope.itemsPerPage = 10;
     $scope.pagedItems = [];
     $scope.currentPage = 0;
 

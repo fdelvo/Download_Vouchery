@@ -93,7 +93,7 @@ namespace Download_Vouchery.Controllers
 
             if (!String.IsNullOrEmpty(blobName))
             {
-                var container = BlobHelper.GetBlobContainer();
+                var container = new BlobHelper().GetBlobContainer();
                 var blob = container.GetBlockBlobReference(blobName);
 
                 // Download the blob into a memory stream. Notice that we're not putting the memory

@@ -1,4 +1,4 @@
-﻿var myApp = angular.module('DownloadVoucheryApp', ['ngResource']);
+﻿var myApp = angular.module('DownloadVoucheryApp', ['ngResource', 'ngRoute']);
 
 myApp.directive('fileModel', ['$parse', function ($parse) {
             return {
