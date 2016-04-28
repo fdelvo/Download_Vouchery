@@ -75,10 +75,10 @@ namespace Download_Vouchery.Controllers
         /// </summary>
         /// <param name="blobId">The ID of the blob.</param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> GetBlobDownload(Guid blobId, Guid voucherId)
+        public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode)
         {
-            var voucher = db.Vouchers.Find(voucherId);
-            var blob = db.BlobUploadModels.Find(blobId);
+            var voucher = db.Vouchers.Where(i => i.VoucherCode == voucherCode).FirstOrDefault();
+            var blob = voucher.VoucherFileId;
 
             if (voucher == null)
             {
@@ -94,7 +94,7 @@ namespace Download_Vouchery.Controllers
 
             try
             {
-                var result = await _service.DownloadBlob(blobId);
+                var result = await _service.DownloadBlob(blob.FileId);
                 if (result == null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -117,6 +117,11 @@ namespace Download_Vouchery.Controllers
                     FileName = HttpUtility.UrlDecode(result.BlobFileName),
                     Size = result.BlobLength
                 };
+
+                voucher.VoucherRedeemed = true;
+                voucher.VoucherRedemptionDate = DateTime.Now;
+
+                await db.SaveChangesAsync();
 
                 return message;
             }

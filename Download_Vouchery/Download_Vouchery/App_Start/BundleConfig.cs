@@ -18,6 +18,7 @@ namespace Download_Vouchery
                         "~/Scripts/Angular/Factories/InterceptorFactory.js",
                         "~/Scripts/Angular/Directives/InterceptorDirective.js",
                         "~/Scripts/Angular/Factories/VoucherFactory.js",
+                        "~/Scripts/Angular/Controllers/VoucherController.js",
                         "~/Scripts/Angular/Controllers/FileController.js"
                         ));
 

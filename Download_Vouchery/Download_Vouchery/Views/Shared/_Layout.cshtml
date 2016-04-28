@@ -10,7 +10,7 @@
     @Scripts.Render("~/bundles/angular")
 
 </head>
-<body>
+<body ng-app="DownloadVoucheryApp">
     <nav>
                     <a href="/Home/Index" class="nav-item">Home</a>
                     <a href="/Administration/Index" class="nav-item">Manage Files</a>
@@ -24,5 +24,8 @@
         <footer>
         </footer>
     </main>
+    <div id="loaderDiv" ng-show="showLoader" loader>
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
+    </div>
 </body>
 </html>

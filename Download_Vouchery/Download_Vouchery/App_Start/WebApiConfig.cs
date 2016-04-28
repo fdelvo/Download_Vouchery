@@ -24,7 +24,7 @@ namespace Download_Vouchery
 
             config.Routes.MapHttpRoute(
                 "GetBlobDownload",
-                "blobs/{blobId}/{voucherId}/download",
+                "blobs/{voucherCode}/download",
                 new { controller = "Blobs", action = "GetBlobDownload" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
             );

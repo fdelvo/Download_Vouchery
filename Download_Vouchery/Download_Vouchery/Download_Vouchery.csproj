@@ -270,6 +270,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\Angular\Controllers\FileController.js" />
+    <Content Include="Scripts\Angular\Controllers\VoucherController.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.min.js" />
     <Content Include="Scripts\Angular\Core\angular-aria.js" />

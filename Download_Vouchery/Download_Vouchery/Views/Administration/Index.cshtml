@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<div ng-app="DownloadVoucheryApp" ng-controller="FileController">
+<div ng-controller="FileController">
     <div class="file-upload card">
         <form role="form" ng-submit="uploadFile()">
             <input type="file" name="file1" file-model="myFile" />
@@ -75,9 +75,6 @@
                 </tr>
             </tfoot>
         </table>
-    </div>
-    <div id="loaderDiv" ng-show="showLoader" loader>
-        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
     </div>
 </div>
 
