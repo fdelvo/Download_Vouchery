@@ -2,8 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, width=device-width">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -11,12 +14,22 @@
 
 </head>
 <body ng-app="DownloadVoucheryApp">
-    <nav>
+    <nav class="desktop">
                     <a href="/Home/Index" class="nav-item">Home</a>
                     <a href="/Administration/Index" class="nav-item">Manage Files</a>
                     <a href="/Home/About" class="nav-item">About</a>
                     <a href="/Home/Contact" class="nav-item">Contact</a>
                     @Html.Partial("_LoginPartial")
+    </nav>
+    <nav class="mobile">
+        <div class="mobile-nav-collapsed" ng-click="showNav = !showNav"><i class="fa fa-bars" aria-hidden="true"></i> Download Vouchery</div>
+        <div class="mobile-nav" ng-show="showNav">
+            <a href="/Home/Index" class="nav-item">Home</a>
+            <a href="/Administration/Index" class="nav-item">Manage Files</a>
+            <a href="/Home/About" class="nav-item">About</a>
+            <a href="/Home/Contact" class="nav-item">Contact</a>
+            @Html.Partial("_LoginPartial")
+        </div>
     </nav>
     <main>
         @RenderBody()

@@ -45,12 +45,16 @@ textarea {
     padding: 0.5rem;
 }
 
-nav {
+.mobile {
+    display: none;
+}
+
+.desktop {
     background-color: #F7CA18;
     box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
 }
 
-.nav-item {
+.desktop .nav-item {
     padding: 1rem;
     display: inline-block;
     color: black;
@@ -59,7 +63,7 @@ nav {
 }
 
 
-.nav-item:hover {
+.desktop .nav-item:hover {
     background-color: #FFE270;
 }
 
@@ -131,4 +135,69 @@ nav {
    margin-left: -32px; /* -1 * image width / 2 */
    margin-top: -32px; /* -1 * image height / 2 */
    display: block;
+}
+
+.info {
+    display: none;
+}
+
+@media(max-width: 1170px) {
+    body {
+        width: 100%;
+    }
+
+    .file-overview {
+        display: block;
+    }
+
+    .file-options {
+        display: block;
+    }
+
+    .card {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        box-sizing: border-box;
+        word-wrap: break-word;
+    }
+
+    main {
+        padding: 0;
+        margin-top: 0.1rem;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .mobile {
+        background-color: #F7CA18;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+        display: block;
+        padding: 1rem;
+    }
+
+    .mobile .nav-item {
+        padding: 1rem;
+        display: block;
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+
+    .mobile .nav-item:hover {
+        background-color: #FFE270;
+    }
+}
+
+@media(max-width: 500px) {
+    table {
+        display: none;
+    }
+
+    .info {
+        display: block;
+    }
 }

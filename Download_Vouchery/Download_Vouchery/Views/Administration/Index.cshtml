@@ -29,13 +29,14 @@
     </div>
     <div class="file-options card" ng-show="voucherOptions" ng-init="GetVouchers()">
         <h2>Vouchers for {{fileName}}</h2>
+        <p class="info">Tables are a pain in the ass to use on mobile devices. When you are using mobile devices the features of Download Vouchery are limited.</p>
+        <ul>
+            <li>Amount: {{voucherAmount}}</li>
+            <li>Redeemed: {{voucherAmountRedeemed}}</li>
+            <li>Not redeemed: {{voucherAmountNotRedeemed}}</li>
+        </ul>
         <table class="voucher-table">
             <thead>
-                <tr>
-                    <th>Amount: {{voucherAmount}}</th>
-                    <th>Redeemed: {{voucherAmountRedeemed}}</th>
-                    <th>Not redeemed: {{voucherAmountNotRedeemed}}</th>
-                </tr>
                 <tr>
                     <th>Code</th>
                     <th>Creation Date</th>

@@ -90,10 +90,11 @@ namespace Download_Vouchery.Controllers
             // from your database, based on the blobId. The record should contain the
             // blobName, which you should return as the result of this helper method.
             var blobName = GetBlobName(blobId);
+            var blobTemp = db.BlobUploadModels.Find(blobId);
 
             if (!String.IsNullOrEmpty(blobName))
             {
-                var container = new BlobHelper().GetBlobContainer();
+                var container = new BlobHelper().GetBlobContainer(blobTemp.FileOwner.Id);
                 var blob = container.GetBlockBlobReference(blobName);
 
                 // Download the blob into a memory stream. Notice that we're not putting the memory

@@ -22,12 +22,18 @@ namespace Download_Vouchery.Controllers
             return manager;
         }
 
-        public CloudBlobContainer GetBlobContainer()
+        public CloudBlobContainer GetBlobContainer(string fileOwnerId = "default")
         {
             // Pull these from config
             var blobStorageConnectionString = ConfigurationManager.AppSettings["BlobStorageConnectionString"];
-            var blobStorageContainerName = UserManager().FindById(User.Identity.GetUserId()).Id.ToString();
 
+            var blobStorageContainerName = fileOwnerId;
+
+            if (fileOwnerId == "default")
+            {
+                blobStorageContainerName = UserManager().FindById(User.Identity.GetUserId()).Id.ToString();
+            }
+            
             // Create blob client and return reference to the container
             var blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
             var blobClient = blobStorageAccount.CreateCloudBlobClient();

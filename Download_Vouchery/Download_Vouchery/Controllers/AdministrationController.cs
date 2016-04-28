@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace Download_Vouchery.Controllers
 {
+    [Authorize]
     public class AdministrationController : Controller
     {
         // GET: Administration

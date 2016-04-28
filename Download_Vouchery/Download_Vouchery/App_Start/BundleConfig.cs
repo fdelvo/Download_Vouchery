@@ -9,9 +9,6 @@ namespace Download_Vouchery
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                        "~/Scripts/Angular/Core/angular.js",
-                        "~/Scripts/Angular/Core/angular-resource.js",
-                        "~/Scripts/Angular/Core/angular-route.js",
                         "~/Scripts/Angular/DownloadVoucheryApp.js",
                         "~/Scripts/Angular/Factories/FileFactory.js",
                         "~/Scripts/Angular/Factories/UploadFactory.js",
@@ -30,6 +27,8 @@ namespace Download_Vouchery
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
+
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

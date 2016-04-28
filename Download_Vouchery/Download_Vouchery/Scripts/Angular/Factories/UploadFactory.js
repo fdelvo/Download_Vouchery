@@ -1,4 +1,9 @@
-﻿angular.module('DownloadVoucheryApp').service('UploadFactory', ['$http', function ($http) {
+﻿(function () { 
+angular.module('DownloadVoucheryApp').service('UploadFactory', UploadFactory);
+
+UploadFactory.$inject = ['$http'];
+
+function UploadFactory ($http) {
     this.uploadFileToUrl = function (file, uploadUrl) {
         var fd = new FormData();
         fd.append('file', file);
@@ -15,4 +20,5 @@
         .error(function () {
         });
     }
-}]);
+}
+})();

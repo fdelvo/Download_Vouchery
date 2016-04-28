@@ -1,4 +1,11 @@
-﻿angular.module('DownloadVoucheryApp').factory('httpInterceptor', function ($q, $rootScope, $log) {
+﻿(function () { 
+    angular.module('DownloadVoucheryApp').factory('httpInterceptor', httpInterceptor).config(function ($httpProvider) {
+        $httpProvider.interceptors.push('httpInterceptor');
+    });
+
+httpInterceptor.$inject = ['$q', '$rootScope', '$log'];
+
+function httpInterceptor ($q, $rootScope, $log) {
 
     var numLoadings = 0;
 
@@ -32,7 +39,5 @@
             return $q.reject(response);
         }
     };
-})
-.config(function ($httpProvider) {
-    $httpProvider.interceptors.push('httpInterceptor');
-});
+}
+})();
