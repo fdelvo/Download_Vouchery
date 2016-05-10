@@ -13,7 +13,7 @@
     <div class="file-overview card" ng-init="GetFiles()">
         <div ng-repeat="f in files track by f.FileId">
             <ul>
-                <li><a href="" ng-click="FilterVouchers(f.FileId); ShowVoucherOptions(f.FileName)">{{f.FileName}}</a></li>
+                <li><a href="" ng-click="GetVouchers(f.FileId); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
                 <li>{{f.FileUrl}}</li>
                 <li>{{f.FileSizeInBytes}}</li>
                 <li>{{f.FileOwner.UserName}}</li>
@@ -27,13 +27,13 @@
             </ul>
         </div>
     </div>
-    <div class="file-options card" ng-show="voucherOptions" ng-init="GetVouchers()">
+    <div class="file-options card" ng-show="voucherOptions">
         <h2>Vouchers for {{fileName}}</h2>
         <p class="info">Tables are a pain in the ass to use on mobile devices. When you are using mobile devices the features of Download Vouchery are limited.</p>
         <ul>
-            <li>Amount: {{voucherAmount}}</li>
-            <li>Redeemed: {{voucherAmountRedeemed}}</li>
-            <li>Not redeemed: {{voucherAmountNotRedeemed}}</li>
+            <li>Amount: {{vouchersInfo.VoucherAmount}}</li>
+            <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
+            <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
         </ul>
         <table class="voucher-table">
             <thead>
@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="v in pagedItems[currentPage] track by v.VoucherId | orderBy:sort.sortingOrder:sort.reverse">
+                <tr ng-repeat="v in vouchers track by v.VoucherId">
                     <td>{{v.VoucherCode}}</td>
                     <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
                     <td>{{v.VoucherRedeemed}}</td>
@@ -58,7 +58,7 @@
                         <div class="pagination">
                             <ul>
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="" ng-click="prevPage()">« Prev</a>
+                                    <a href="" ng-click="prevPage(fileId)">« Prev</a>
                                 </li>
 
                                 <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
@@ -68,7 +68,7 @@
                                 </li>
 
                                 <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-                                    <a href="" ng-click="nextPage()">Next »</a>
+                                    <a href="" ng-click="nextPage(fileId)">Next »</a>
                                 </li>
                             </ul>
                         </div>

@@ -5,9 +5,29 @@
 body {
     margin: 0;
     background-color: #F2F1EF;
+    line-height: 1.5;
+    font-size: 100%;
+    color: #382513;
 }
 
+h1 {
+  font-size: 2.747rem;
+}
+h2 {
+  font-size: 1.229rem;
+}
+h3 {
+  font-size: 0.874rem;
+}
+
+
 /* Set padding to keep content from hitting the edges */
+.index {
+    width: 60% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
 main {
     margin-top: 1rem;
     padding-left: 15px;
@@ -19,13 +39,6 @@ main {
 */
 .dl-horizontal dt {
     white-space: normal;
-}
-
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
 }
 
 .file-overview {
@@ -42,7 +55,7 @@ textarea {
     margin: 0.5rem;
     background: white;
     box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
-    padding: 0.5rem;
+    padding: 4rem;
 }
 
 .mobile {
@@ -119,10 +132,10 @@ textarea {
 
 #loaderDiv {
    position: fixed;
-   top: 0;
-   right: 0;
    bottom: 0;
+   right: 0;
    left: 0;
+   height: 4rem;
    z-index: 1100;
    background-color: white;
    opacity: .6;
@@ -133,12 +146,34 @@ textarea {
    left: 50%;
    top: 50%;
    margin-left: -32px; /* -1 * image width / 2 */
-   margin-top: -32px; /* -1 * image height / 2 */
+   margin-top: -22px; /* -1 * image height / 2 */
    display: block;
 }
 
 .info {
     display: none;
+}
+
+.redeem-code {
+    text-align: center;
+}
+
+.redeem-code-form {
+    width: 50%;
+    height: 9rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.redeem-code-form input[type="text"] {
+    width: 100%;
+    height: 6rem;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.index-ul li {
 }
 
 @media(max-width: 1170px) {

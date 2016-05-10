@@ -1,6 +1,23 @@
-﻿<div ng-controller="VoucherController" class="card">
-    <form>
-        <input type="text" ng-model="download.VoucherCode" />
-        <a ng-href="/blobs/{{download.VoucherCode}}/download">Download</a>
-    </form>
+﻿<div class="index">
+    <div class="card">
+        <h1>Welcome to Download Vouchery!</h1>
+        <p>
+            Download Vouchery is your opportunity to easily share your digital content online and offline. You can upload your files and create voucher codes to share your data. People who got a voucher code can download your files in a quick and easy way.
+        </p>
+        <h2>How does it work?</h2>
+        <ol class="index-ul">
+            <li>Create an account by clicking on "Register" on top of the page</li>
+            <li>Upload your files</li>
+            <li>Create voucher codes for your files</li>
+            <li>Print or share them online</li>
+        </ol>
+    </div>
+    <div ng-controller="VoucherController" class="redeem-code card">
+        <h2>You got a voucher code?</h2>
+        <p>Great! Just type your code in and click download.</p>
+        <form class="redeem-code-form">
+            <input type="text" placeholder="Download Code" ng-model="download.VoucherCode" />
+            <a ng-href="/blobs/{{download.VoucherCode}}/download">Download</a>
+        </form>
+    </div>
 </div>

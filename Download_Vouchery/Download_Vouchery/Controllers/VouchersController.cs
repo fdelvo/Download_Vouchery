@@ -18,6 +18,7 @@ using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Data.Common;
 using System.Reflection;
+using System.Data.Entity.Core.Objects;
 
 namespace Download_Vouchery.Controllers
 {
@@ -32,15 +33,44 @@ namespace Download_Vouchery.Controllers
         }
 
         // GET: api/Vouchers
-        public IQueryable<Voucher> GetVouchers()
+        public async Task<IHttpActionResult> GetVouchers(Guid id, int pageIndex = 0, int pageSize = 10)
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
-            return db.Vouchers.Include(fi => fi.VoucherFileId).Include(u => u.VoucherFileId.FileOwner).Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id);
+
+            var vouchers = await db.Vouchers
+                .Include(fo => fo.VoucherFileId.FileOwner)
+                .Include(fi => fi.VoucherFileId)
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id)
+                .OrderBy(d => d.VoucherId)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(vouchers);
+        }
+
+        [ResponseType(typeof(VoucherInfoViewModel))]
+        public async Task<IHttpActionResult> GetVouchersInfo(Guid id)
+        {
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
+            VoucherInfoViewModel voucherInfo = new VoucherInfoViewModel();
+
+            voucherInfo.VoucherAmount = await db.Vouchers
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id)
+                .CountAsync();
+            voucherInfo.VoucherAmountRedeemed = await db.Vouchers
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == true)
+                .CountAsync();
+            voucherInfo.VoucherAmountRedeemed = await db.Vouchers
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == false)
+                .CountAsync();
+
+            return Ok(voucherInfo);
         }
 
         // GET: api/Vouchers/5
         [ResponseType(typeof(Voucher))]
-        public async Task<IHttpActionResult> GetVoucher(Guid id)
+        public async Task<IHttpActionResult> GetVoucherDetails(Guid id)
         {
             Voucher voucher = await db.Vouchers.FindAsync(id);
             if (voucher == null)
@@ -100,6 +130,7 @@ namespace Download_Vouchery.Controllers
             using (SqlBulkCopy bc = new SqlBulkCopy(dataBaseConnectionString, options))
             {
                 bc.DestinationTableName = destinationTable;
+                bc.BulkCopyTimeout = 100000;
                 foreach (DataColumn col in reader.Columns)
                 {
                     bc.ColumnMappings.Add(col.ColumnName, col.ColumnName);

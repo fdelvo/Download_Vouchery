@@ -37,6 +37,20 @@ namespace Download_Vouchery
             );
 
             config.Routes.MapHttpRoute(
+                "GetVouchers",
+                "api/vouchers/{id}/{pageIndex}/{pageSize}",
+                new { controller = "Vouchers", action = "GetVouchers" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "GetVouchersInfo",
+                "api/vouchers/getvouchersinfo/{id}",
+                new { controller = "Vouchers", action = "GetVouchersInfo" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }

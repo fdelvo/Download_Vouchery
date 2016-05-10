@@ -12,6 +12,13 @@ namespace Download_Vouchery.ViewModels
         public int VoucherAmount { get; set; }
     }
 
+    public class VoucherInfoViewModel
+    {
+        public int VoucherAmount;
+        public int VoucherAmountRedeemed;
+        public int VoucherAmountNotRedeemed;
+    }
+
     public class VoucherBulkInsertViewModel 
     {
         public Guid VoucherId { get; set; }
