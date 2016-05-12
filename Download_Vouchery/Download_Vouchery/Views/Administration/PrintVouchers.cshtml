@@ -1,0 +1,9 @@
+﻿<div class="voucher-container" ng-controller="FileController" ng-init="GetVouchers('3fab23a1-36e6-4f73-bc2a-d3e3a0ddf92d')">
+        <div class="voucher" ng-repeat="v in vouchers track by v.VoucherId">
+            <div class="voucher-content">
+                {{v.VoucherCode}}
+            </div>
+        </div> 
+</div>
+
+

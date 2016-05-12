@@ -236,3 +236,38 @@ main {
         display: block;
     }
 }
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+    .voucher {
+        width: 100%;
+        height: 50%;
+        text-align: center;
+        display: table;
+        border-bottom: 1px solid black;
+        box-sizing: border-box;
+    }
+
+    html, body, .voucher-container {
+        width: 210mm;
+        height: 297mm;
+    }
+
+    .voucher-content {
+        display: table-cell;
+        vertical-align: middle;
+        height: 100%;
+    }
+
+    .mobile {
+        display: none;
+    }
+
+    main {
+        margin: 0;
+    }
+}
