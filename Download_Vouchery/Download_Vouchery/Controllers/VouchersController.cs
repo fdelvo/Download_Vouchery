@@ -65,6 +65,17 @@ namespace Download_Vouchery.Controllers
                 .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == false)
                 .CountAsync();
 
+            if (db.Vouchers.Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == true).Any())
+            {
+                voucherInfo.VoucherRedemptionFrequency = await db.Vouchers
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == true)
+                .AverageAsync(c => c.VoucherRedemptionCounter);
+            }
+            else
+            {
+                voucherInfo.VoucherRedemptionFrequency = 0;
+            }
+
             return Ok(voucherInfo);
         }
 
@@ -186,6 +197,7 @@ namespace Download_Vouchery.Controllers
                 voucher.VoucherRedeemed = false;
                 voucher.VoucherRedemptionDate = null;
                 voucher.VoucherFileId_FileId = voucherFile.FileId;
+                voucher.VoucherRedemptionCounter = 0;
 
                 temp.AddFirst(voucher);
             }

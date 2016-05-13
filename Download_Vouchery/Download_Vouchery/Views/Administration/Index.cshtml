@@ -34,6 +34,8 @@
             <li>Amount: {{vouchersInfo.VoucherAmount}}</li>
             <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
             <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
+            <li>Average redemption frequency per voucher: {{vouchersInfo.VoucherRedemptionFrequency}}</li>
+            <li><a href="http://localhost:54809/Administration/PrintVouchers/{{vouchers[0].VoucherFileId.FileId}}">Print vouchers</a></li>
         </ul>
         <table class="voucher-table">
             <thead>
@@ -42,6 +44,7 @@
                     <th>Creation Date</th>
                     <th>Redeemed</th>
                     <th>Redemption Date</th>
+                    <th>Redemption frequency</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,11 +53,12 @@
                     <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
                     <td>{{v.VoucherRedeemed}}</td>
                     <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                    <td>{{v.VoucherRedemptionCounter}}</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         <div class="pagination">
                             <ul>
                                 <li ng-class="{disabled: currentPage == 0}">

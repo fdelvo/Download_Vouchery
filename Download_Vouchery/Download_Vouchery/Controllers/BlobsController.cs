@@ -119,6 +119,7 @@ namespace Download_Vouchery.Controllers
                 };
 
                 voucher.VoucherRedeemed = true;
+                voucher.VoucherRedemptionCounter++;
                 voucher.VoucherRedemptionDate = DateTime.Now;
 
                 await db.SaveChangesAsync();

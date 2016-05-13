@@ -22,5 +22,6 @@ namespace Download_Vouchery.Models
         [Required]
         public DateTime VoucherCreationDate { get; set; }
         public DateTime? VoucherRedemptionDate { get; set; }
+        public int VoucherRedemptionCounter { get; set; }
     }
 }

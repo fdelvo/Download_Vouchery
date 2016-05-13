@@ -262,6 +262,10 @@
     <Compile Include="Migrations\201604201230337_auto_increment_id.Designer.cs">
       <DependentUpon>201604201230337_auto_increment_id.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605131154437_voucher_counter.cs" />
+    <Compile Include="Migrations\201605131154437_voucher_counter.Designer.cs">
+      <DependentUpon>201605131154437_voucher_counter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BlobDownloadModel.cs" />
@@ -1154,6 +1158,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604201230337_auto_increment_id.resx">
       <DependentUpon>201604201230337_auto_increment_id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605131154437_voucher_counter.resx">
+      <DependentUpon>201605131154437_voucher_counter.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

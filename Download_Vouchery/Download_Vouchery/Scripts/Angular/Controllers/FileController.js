@@ -56,5 +56,11 @@
             page++;
             $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size });
         };
+
+        $scope.GetValueAtIndex = function (index) {
+            var str = window.location.href;
+            console.log(str.split("/")[index])
+            return str.split("/")[index];
+        }
     }
 })();

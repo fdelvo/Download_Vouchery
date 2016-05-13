@@ -14,9 +14,10 @@ namespace Download_Vouchery.ViewModels
 
     public class VoucherInfoViewModel
     {
-        public int VoucherAmount;
-        public int VoucherAmountRedeemed;
-        public int VoucherAmountNotRedeemed;
+        public int VoucherAmount { get; set; }
+        public int VoucherAmountRedeemed { get; set; }
+        public int VoucherAmountNotRedeemed { get; set; }
+        public double VoucherRedemptionFrequency { get; set; }
     }
 
     public class VoucherBulkInsertViewModel 
@@ -31,6 +32,8 @@ namespace Download_Vouchery.ViewModels
 
         public DateTime VoucherCreationDate { get; set; }
         public DateTime? VoucherRedemptionDate { get; set; }
+
+        public int VoucherRedemptionCounter { get; set; }
     }
 
 

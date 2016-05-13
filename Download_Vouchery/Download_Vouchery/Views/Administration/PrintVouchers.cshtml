@@ -1,7 +1,21 @@
-﻿<div class="voucher-container" ng-controller="FileController" ng-init="GetVouchers('3fab23a1-36e6-4f73-bc2a-d3e3a0ddf92d')">
+﻿<div class="print-instructions">
+    <h1>Print Vouchers</h1>
+    <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
+    <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
+</div>
+<div class="voucher-container" ng-controller="FileController" ng-init="GetVouchers(GetValueAtIndex(5))">
         <div class="voucher" ng-repeat="v in vouchers track by v.VoucherId">
             <div class="voucher-content">
-                {{v.VoucherCode}}
+                <h1>Download Voucher</h1>
+                <i>for the file: {{v.VoucherFileId.FileName}}</i>
+                <br />
+                <strong>To redeem your voucher follow the steps below.</strong>
+                <ol>
+                    <li>Visit www.download-vouchery.com</li>
+                    <li>Scroll down to the box with the "You got a voucher?" headline</li>
+                    <li>Enter the following code and click "Download"</li>
+                </ol>
+                <code>{{v.VoucherCode}}</code>
             </div>
         </div> 
 </div>
