@@ -105,29 +105,7 @@ main {
     display: inline;
 }
 
-.pagination ul li  a {
-    color: black;
-    text-decoration: none;
-    padding: 0.4rem 0.7rem;
-    border: solid #F7CA18 0.1rem;
-    border-right-width: 0.001rem;
-    border-left-width: 0.001rem;
-    float: left;
-}
 
-.pagination ul li:first-child  a {
-    color: black;
-    text-decoration: none;
-    border-left-width: 0.1rem;
-    float: left;
-}
-
-.pagination ul li:last-child  a {
-    color: black;
-    text-decoration: none;
-    border-right-width: 0.1rem;
-    float: left;
-}
 
 .active a {
     color: #671AA6 !important;
@@ -142,7 +120,7 @@ main {
    height: 4rem;
    z-index: 1100;
    background-color: white;
-   opacity: .6;
+   opacity: .8;
 }
 
 .ajax-loader {
@@ -182,6 +160,37 @@ main {
 
 .voucher-container {
     display: none;
+}
+
+.button {
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 100%;
+    padding: .5em 1em;
+    color: #444;
+    color: rgba(0,0,0,.8);
+    border: 1px solid #999;
+    border: 0 rgba(0,0,0,0);
+    background-color: #E6E6E6;
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+.button:hover {
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+}
+
+input[type="text"], input[type="number"], input[type="password"] {
+    font-family: inherit;
+    font-size: 100%;
+    padding: .5em 1em;
+    color: #444;
+    color: rgba(0,0,0,.8);
+    border: 1px solid #671AA6 !important;
+    border: 0 rgba(0,0,0,0);
+    text-decoration: none;
+    border-radius: 2px;
+    outline-color: #671AA6 !important;
 }
 
 @media(max-width: 1170px) {

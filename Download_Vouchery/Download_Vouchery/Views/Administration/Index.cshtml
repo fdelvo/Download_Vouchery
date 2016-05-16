@@ -7,7 +7,7 @@
     <div class="file-upload card">
         <form role="form" ng-submit="uploadFile()">
             <input type="file" name="file1" file-model="myFile" />
-            <input type="submit" value="Upload" />
+            <input class="button" type="submit" value="Upload" />
         </form>
     </div>
     <div class="file-overview card" ng-init="GetFiles()">
@@ -21,7 +21,7 @@
                 <li ng-show="newVoucherForm">
                     <form role="form" ng-submit="CreateVoucher(f.FileId)">
                         <input type="number" ng-model="newVoucher.VoucherAmount" />
-                        <input type="submit" value="Create Voucher" />
+                        <input class="button" type="submit" value="Create Voucher" />
                     </form>
                 </li>
             </ul>
@@ -62,7 +62,7 @@
                         <div class="pagination">
                             <ul>
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="" ng-click="prevPage(fileId)">« Prev</a>
+                                    <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
                                 </li>
 
                                 <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
@@ -72,7 +72,7 @@
                                 </li>
 
                                 <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-                                    <a href="" ng-click="nextPage(fileId)">Next »</a>
+                                    <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
                                 </li>
                             </ul>
                         </div>
