@@ -19,6 +19,10 @@ using System.Data.SqlServerCe;
 using System.Data.Common;
 using System.Reflection;
 using System.Data.Entity.Core.Objects;
+using Newtonsoft.Json;
+using System.Text;
+using System.Web;
+using System.Diagnostics;
 
 namespace Download_Vouchery.Controllers
 {
@@ -49,6 +53,19 @@ namespace Download_Vouchery.Controllers
             return Ok(vouchers);
         }
 
+        public async Task<IHttpActionResult> GetAllVouchers(Guid id)
+        {
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
+
+            var vouchers = await db.Vouchers
+                .Include(fo => fo.VoucherFileId.FileOwner)
+                .Include(fi => fi.VoucherFileId)
+                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id)
+                .ToListAsync();
+
+            return Ok(vouchers);
+        }
+
         [ResponseType(typeof(VoucherInfoViewModel))]
         public async Task<IHttpActionResult> GetVouchersInfo(Guid id)
         {
@@ -61,7 +78,7 @@ namespace Download_Vouchery.Controllers
             voucherInfo.VoucherAmountRedeemed = await db.Vouchers
                 .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == true)
                 .CountAsync();
-            voucherInfo.VoucherAmountRedeemed = await db.Vouchers
+            voucherInfo.VoucherAmountNotRedeemed = await db.Vouchers
                 .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id && fi.VoucherFileId.FileId == id && fi.VoucherRedeemed == false)
                 .CountAsync();
 
@@ -180,9 +197,25 @@ namespace Download_Vouchery.Controllers
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> PostVoucher(VoucherViewModel vm, string id)
         {
-            if (!ModelState.IsValid)
+            var proceed = true;
+
+            if (!ModelState.IsValid || vm.VoucherAmount > 10000)
             {
-                return BadRequest(ModelState);
+                proceed = false;
+            }
+
+            if(db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).Any() == true)
+            {
+                var check = await db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
+                if (check >= 10000 || check + vm.VoucherAmount > 10000)
+                {
+                    proceed = false;
+                }
+            }
+
+            if (proceed == false)
+            {
+                return BadRequest("Validation failed or you would exceed the maximum amount of vouchers (10000).");
             }
 
             var voucherFile = db.BlobUploadModels.Find(new Guid(id));

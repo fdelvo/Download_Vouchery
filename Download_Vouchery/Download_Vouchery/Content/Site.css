@@ -41,18 +41,32 @@ main {
     white-space: normal;
 }
 
-.file-overview {
+.card-inline {
     display: inline-block;
-    width: 42.1%;
-    max-width: 42.1%;
+    width: 50%;
+    max-width: 50%;
     vertical-align: top;
+    white-space: normal;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    box-sizing: border-box;
 }
 
-.file-options {
-    display: inline-block;
-    width: 42.1%;
-    max-width: 42.1%;
-    vertical-align: top;
+.card-inline:last-child {
+    padding-right: 4rem;
+}
+
+.card-inline:first-child {
+    padding-left: 4rem;
+}
+
+.card-wrapper {
+    background: white;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+    white-space: nowrap;
+    margin: 0.5rem;
 }
 
 .card {
@@ -174,6 +188,7 @@ main {
     background-color: #E6E6E6;
     text-decoration: none;
     border-radius: 2px;
+    outline-color: #671AA6 !important;
 }
 
 .button:hover {

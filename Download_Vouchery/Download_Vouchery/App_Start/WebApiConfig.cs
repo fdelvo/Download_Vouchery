@@ -37,6 +37,13 @@ namespace Download_Vouchery
             );
 
             config.Routes.MapHttpRoute(
+                "GetAllVouchers",
+                "api/vouchers/{id}/all",
+                new { controller = "Vouchers", action = "GetAllVouchers" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
                 "GetVouchers",
                 "api/vouchers/{id}/{pageIndex}/{pageSize}",
                 new { controller = "Vouchers", action = "GetVouchers" },

@@ -7,20 +7,26 @@
         $scope.files = [];
         $scope.vouchers = [];
         $scope.newVoucher = new VoucherFactory();
+        $scope.voucherAmount = [];
         $scope.voucherOptions = false;
         $scope.fileName = "";
         $scope.fileId = "";
         $scope.vouchersInfo = [];
         var page = 0;
         var size = 10;
+        $scope.pageIndex = 0;
 
-        $scope.CreateVoucher = function (fileId) {
+        $scope.CreateVoucher = function (fileId, index) {
+            $scope.newVoucher.VoucherAmount = $scope.voucherAmount[index];
             $scope.newVoucher.$save({ id: fileId }, function () { window.location.reload(); });
         }
 
-        $scope.GetVouchers = function (fileId) {
+        $scope.GetVouchers = function (fileId, page, size) {
             page = 0;
-            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size });           
+            $scope.vouchers = [];
+            $scope.pageIndex = 0;
+            $scope.vouchers.push(VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }));
+            console.log($scope.vouchers);
         }
 
         $scope.GetVouchersInfo = function (fileId) {
@@ -48,13 +54,20 @@
         };   
 
         $scope.prevPage = function (fileId) {
-            page--;
-            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size });
+            $scope.pageIndex--;
+            if ($scope.pageIndex <= 0) {
+                $scope.pageIndex = 0;
+            }
         };
 
         $scope.nextPage = function (fileId) {
             page++;
-            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size });
+            $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
+                if ($scope.vouchersTemp.length > 0) {
+                    $scope.vouchers.push($scope.vouchersTemp);
+                    $scope.pageIndex++;
+                }
+            });
         };
 
         $scope.GetValueAtIndex = function (index) {

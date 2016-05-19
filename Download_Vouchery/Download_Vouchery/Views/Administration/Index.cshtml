@@ -10,76 +10,79 @@
             <input class="button" type="submit" value="Upload" />
         </form>
     </div>
-    <div class="file-overview card" ng-init="GetFiles()">
-        <div ng-repeat="f in files track by f.FileId">
-            <ul>
-                <li><a href="" ng-click="GetVouchers(f.FileId); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
-                <li>{{f.FileUrl}}</li>
-                <li>{{f.FileSizeInBytes}}</li>
-                <li>{{f.FileOwner.UserName}}</li>
-                <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
-                <li ng-show="newVoucherForm">
-                    <form role="form" ng-submit="CreateVoucher(f.FileId)">
-                        <input type="number" ng-model="newVoucher.VoucherAmount" />
-                        <input class="button" type="submit" value="Create Voucher" />
-                    </form>
-                </li>
-            </ul>
+    <div class="card-wrapper">
+        <div class="card-inline" ng-init="GetFiles()">
+            <div ng-repeat="f in files track by f.FileId">
+                <ul>
+                    <li><a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
+                    <li>{{f.FileUrl}}</li>
+                    <li>{{f.FileSizeInBytes}}</li>
+                    <li>{{f.FileOwner.UserName}}</li>
+                    <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
+                    <li ng-show="newVoucherForm">
+                        <form role="form" ng-submit="CreateVoucher(f.FileId, $index)">
+                            <input type="number" max="10000" ng-model="voucherAmount[$index]" />
+                            <input class="button" type="submit" value="Create Voucher" />
+                            <p>Maximum amount per file: 10000</p>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="file-options card" ng-show="voucherOptions">
-        <h2>Vouchers for {{fileName}}</h2>
-        <p class="info">Tables are a pain in the ass to use on mobile devices. When you are using mobile devices the features of Download Vouchery are limited.</p>
-        <ul>
-            <li>Amount: {{vouchersInfo.VoucherAmount}}</li>
-            <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
-            <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
-            <li>Average redemption frequency per voucher: {{vouchersInfo.VoucherRedemptionFrequency}}</li>
-            <li><a href="http://localhost:54809/Administration/PrintVouchers/{{vouchers[0].VoucherFileId.FileId}}">Print vouchers</a></li>
-        </ul>
-        <table class="voucher-table">
-            <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Creation Date</th>
-                    <th>Redeemed</th>
-                    <th>Redemption Date</th>
-                    <th>Redemption frequency</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="v in vouchers track by v.VoucherId">
-                    <td>{{v.VoucherCode}}</td>
-                    <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
-                    <td>{{v.VoucherRedeemed}}</td>
-                    <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
-                    <td>{{v.VoucherRedemptionCounter}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5">
-                        <div class="pagination">
-                            <ul>
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
-                                </li>
+        <div class="card-inline" ng-show="voucherOptions">
+            <h2>Vouchers for {{fileName}}</h2>
+            <p class="info">Tables are a pain in the ass to use on mobile devices. When you are using mobile devices the features of Download Vouchery are limited.</p>
+            <ul>
+                <li>Amount: {{vouchersInfo.VoucherAmount}}</li>
+                <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
+                <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
+                <li>Average redemption frequency per voucher: {{vouchersInfo.VoucherRedemptionFrequency}}</li>
+                <li><a href="http://localhost:54809/Administration/PrintVouchers/{{vouchers[0][0].VoucherFileId.FileId}}">Print vouchers</a></li>
+            </ul>
+            <table class="voucher-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Creation Date</th>
+                        <th>Redeemed</th>
+                        <th>Redemption Date</th>
+                        <th>Redemption frequency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="v in vouchers[pageIndex] track by v.VoucherId">
+                        <td>{{v.VoucherCode}}</td>
+                        <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                        <td>{{v.VoucherRedeemed}}</td>
+                        <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                        <td>{{v.VoucherRedemptionCounter}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="pagination">
+                                <ul>
+                                    <li ng-class="{disabled: currentPage == 0}">
+                                        <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
+                                    </li>
 
-                                <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-                                    ng-class="{active: n == currentPage}"
-                                    ng-click="setPage()">
-                                    <a href="" ng-bind="n + 1">1</a>
-                                </li>
+                                    <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                        ng-class="{active: n == currentPage}"
+                                        ng-click="setPage()">
+                                        <a href="" ng-bind="n + 1">1</a>
+                                    </li>
 
-                                <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-                                    <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                                    <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                        <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>
 
