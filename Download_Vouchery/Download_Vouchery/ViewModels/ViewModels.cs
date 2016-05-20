@@ -20,6 +20,16 @@ namespace Download_Vouchery.ViewModels
         public double VoucherRedemptionFrequency { get; set; }
     }
 
+    public class OnlineVoucherInfoViewModel
+    {
+        public int VoucherAmount { get; set; }
+        public int VoucherAmountRedeemed { get; set; }
+        public int VoucherAmountNotRedeemed { get; set; }
+        public double VoucherRedemptionFrequency { get; set; }
+        public int VoucherAmountShared { get; set; }
+        public int VoucherAmountNotShared { get; set; }
+    }
+
     public class VoucherBulkInsertViewModel 
     {
         public Guid VoucherId { get; set; }
@@ -34,6 +44,24 @@ namespace Download_Vouchery.ViewModels
         public DateTime? VoucherRedemptionDate { get; set; }
 
         public int VoucherRedemptionCounter { get; set; }
+    }
+
+    public class OnlineVoucherBulkInsertViewModel
+    {
+        public Guid OnlineVoucherId { get; set; }
+
+        public string OnlineVoucherCode { get; set; }
+
+        public bool OnlineVoucherRedeemed { get; set; }
+
+        public Guid OnlineVoucherFileId_FileId { get; set; }
+
+        public DateTime OnlineVoucherCreationDate { get; set; }
+        public DateTime? OnlineVoucherRedemptionDate { get; set; }
+
+        public int OnlineVoucherRedemptionCounter { get; set; }
+
+        public bool OnlineVoucherShared { get; set; }
     }
 
 

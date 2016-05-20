@@ -230,6 +230,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IBlobService.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OnlineVouchersController.cs" />
     <Compile Include="Controllers\VouchersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -266,6 +267,14 @@
     <Compile Include="Migrations\201605131154437_voucher_counter.Designer.cs">
       <DependentUpon>201605131154437_voucher_counter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605201503382_online_vouchers.cs" />
+    <Compile Include="Migrations\201605201503382_online_vouchers.Designer.cs">
+      <DependentUpon>201605201503382_online_vouchers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605201538432_online_vouchers_changes.cs" />
+    <Compile Include="Migrations\201605201538432_online_vouchers_changes.Designer.cs">
+      <DependentUpon>201605201538432_online_vouchers_changes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BlobDownloadModel.cs" />
@@ -273,6 +282,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Voucher.cs" />
+    <Compile Include="Models\OnlineVoucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ViewModels.cs" />
@@ -1117,6 +1127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\VoucherOnlines\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -1161,6 +1172,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605131154437_voucher_counter.resx">
       <DependentUpon>201605131154437_voucher_counter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605201503382_online_vouchers.resx">
+      <DependentUpon>201605201503382_online_vouchers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605201538432_online_vouchers_changes.resx">
+      <DependentUpon>201605201538432_online_vouchers_changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

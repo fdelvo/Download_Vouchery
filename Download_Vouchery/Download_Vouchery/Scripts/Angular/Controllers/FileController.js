@@ -33,6 +33,11 @@
             $scope.vouchersInfo = $http.get(' http://localhost:54809/api/vouchers/getvouchersinfo/' + fileId).then(function (response) { $scope.vouchersInfo = response.data});
         }
 
+        $scope.GetAllVouchers = function (fileId) {
+            $scope.vouchers = [];
+            $scope.vouchersInfo = $http.get(' http://localhost:54809/api/vouchers/' + fileId + '/all').then(function (response) { $scope.vouchers = response.data });
+        }
+
         $scope.ShowVoucherOptions = function (fileName, fileId) {
             $scope.voucherOptions = true;
             $scope.fileName = fileName;

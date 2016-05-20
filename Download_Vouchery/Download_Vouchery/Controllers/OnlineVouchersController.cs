@@ -17,7 +17,7 @@ using System.Reflection;
 
 namespace Download_Vouchery.Controllers
 {
-    public class VouchersController : ApiController
+    public class OnlineVouchersController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -27,48 +27,54 @@ namespace Download_Vouchery.Controllers
             return manager;
         }
 
-        // GET: api/Vouchers
-        public async Task<IHttpActionResult> GetVouchers(Guid id, int pageIndex = 0, int pageSize = 10)
+        public async Task<IHttpActionResult> GetOnlineVouchers(Guid id, int pageIndex = 0, int pageSize = 10)
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
-            var vouchers = await db.Vouchers
-                .Include(fo => fo.VoucherFileId.FileOwner)
-                .Include(fi => fi.VoucherFileId)
-                .Where(ui => ui.VoucherFileId.FileOwner.Id == currentUser.Id)
-                .Where(fi => fi.VoucherFileId.FileId == id)
-                .OrderBy(d => d.VoucherId)
+            var onlineVouchers = await db.OnlineVouchers
+                .Include(fo => fo.OnlineVoucherFileId.FileOwner)
+                .Include(fi => fi.OnlineVoucherFileId)
+                .Where(ui => ui.OnlineVoucherFileId.FileOwner.Id == currentUser.Id)
+                .Where(fi => fi.OnlineVoucherFileId.FileId == id)
+                .OrderBy(d => d.OnlineVoucherId)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return Ok(vouchers);
+            return Ok(onlineVouchers);
         }
 
-        [ResponseType(typeof(VoucherInfoViewModel))]
-        public async Task<IHttpActionResult> GetVouchersInfo(Guid id)
+        [ResponseType(typeof(OnlineVoucherInfoViewModel))]
+        public async Task<IHttpActionResult> GetOnlineVouchersInfo(Guid id)
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
-            VoucherInfoViewModel voucherInfo = new VoucherInfoViewModel();
+            OnlineVoucherInfoViewModel voucherInfo = new OnlineVoucherInfoViewModel();
 
-            voucherInfo.VoucherAmount = await db.Vouchers
-                .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
-                    i.VoucherFileId.FileId == id);
+            voucherInfo.VoucherAmount = await db.OnlineVouchers
+                .CountAsync(i => i.OnlineVoucherFileId.FileOwner.Id == currentUser.Id &&
+                    i.OnlineVoucherFileId.FileId == id);
 
-            voucherInfo.VoucherAmountRedeemed = await db.Vouchers
-                .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
-                    i.VoucherFileId.FileId == id &&
-                    i.VoucherRedeemed == true);
+            voucherInfo.VoucherAmountRedeemed = await db.OnlineVouchers
+                .CountAsync(i => i.OnlineVoucherFileId.FileOwner.Id == currentUser.Id &&
+                    i.OnlineVoucherFileId.FileId == id &&
+                    i.OnlineVoucherRedeemed == true);
 
             voucherInfo.VoucherAmountNotRedeemed = voucherInfo.VoucherAmount - voucherInfo.VoucherAmountRedeemed;
 
+            voucherInfo.VoucherAmountShared = await db.OnlineVouchers
+                .CountAsync(i => i.OnlineVoucherFileId.FileOwner.Id == currentUser.Id &&
+                    i.OnlineVoucherFileId.FileId == id &&
+                    i.OnlineVoucherShared == true);
+
+            voucherInfo.VoucherAmountNotShared = voucherInfo.VoucherAmount - voucherInfo.VoucherAmountShared;
+
             if (voucherInfo.VoucherAmountRedeemed > 0)
             {
-                voucherInfo.VoucherRedemptionFrequency = await db.Vouchers
-                .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id)
-                .Where(ui => ui.VoucherFileId.FileId == id)
-                .Where(vr => vr.VoucherRedeemed == true)
-                .AverageAsync(c => c.VoucherRedemptionCounter);
+                voucherInfo.VoucherRedemptionFrequency = await db.OnlineVouchers
+                .Where(fi => fi.OnlineVoucherFileId.FileOwner.Id == currentUser.Id)
+                .Where(ui => ui.OnlineVoucherFileId.FileId == id)
+                .Where(vr => vr.OnlineVoucherRedeemed == true)
+                .AverageAsync(c => c.OnlineVoucherRedemptionCounter);
             }
             else
             {
@@ -126,7 +132,7 @@ namespace Download_Vouchery.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        
+
 
         private async Task<string> DoBulkCopy(bool keepNulls, DataTable reader, string destinationTable)
         {
@@ -176,8 +182,8 @@ namespace Download_Vouchery.Controllers
         }
 
         // POST: api/Vouchers
-        [ResponseType(typeof(Voucher))]
-        public async Task<IHttpActionResult> PostVoucher(VoucherViewModel vm, string id)
+        [ResponseType(typeof(OnlineVoucher))]
+        public async Task<IHttpActionResult> PostOnlineVoucher(VoucherViewModel vm, string id)
         {
             var proceed = true;
 
@@ -186,42 +192,35 @@ namespace Download_Vouchery.Controllers
                 proceed = false;
             }
 
-            if (db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).Any() == true)
-            {
-                var check = await db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
-                if (check >= 10000 || check + vm.VoucherAmount > 10000)
-                {
-                    proceed = false;
-                }
-            }
-
             if (proceed == false)
             {
                 return BadRequest("Validation failed or you tried to create more than 10000 vouchers at once.");
             }
 
             var voucherFile = db.BlobUploadModels.Find(new Guid(id));
-            LinkedList<VoucherBulkInsertViewModel> temp = new LinkedList<VoucherBulkInsertViewModel>();
+            LinkedList<OnlineVoucherBulkInsertViewModel> temp = new LinkedList<OnlineVoucherBulkInsertViewModel>();
 
-            for (int i = 0; i < vm.VoucherAmount; i++) {
-                var voucher = new VoucherBulkInsertViewModel();
+            for (int i = 0; i < vm.VoucherAmount; i++)
+            {
+                var voucher = new OnlineVoucherBulkInsertViewModel();
 
-                voucher.VoucherId = Guid.NewGuid();
-                voucher.VoucherCode = voucher.VoucherId.ToString().Substring(0,8);
-                voucher.VoucherCreationDate = DateTime.Now;
-                voucher.VoucherRedeemed = false;
-                voucher.VoucherRedemptionDate = null;
-                voucher.VoucherFileId_FileId = voucherFile.FileId;
-                voucher.VoucherRedemptionCounter = 0;
+                voucher.OnlineVoucherId = Guid.NewGuid();
+                voucher.OnlineVoucherCode = voucher.OnlineVoucherId.ToString().Substring(0, 8);
+                voucher.OnlineVoucherCreationDate = DateTime.Now;
+                voucher.OnlineVoucherRedeemed = false;
+                voucher.OnlineVoucherRedemptionDate = null;
+                voucher.OnlineVoucherFileId_FileId = voucherFile.FileId;
+                voucher.OnlineVoucherRedemptionCounter = 0;
+                voucher.OnlineVoucherShared = false;
 
                 temp.AddFirst(voucher);
             }
 
-            var reader = ToDataTable<VoucherBulkInsertViewModel>(temp);
+            var reader = ToDataTable<OnlineVoucherBulkInsertViewModel>(temp);
 
             try
             {
-                await DoBulkCopy(false, reader, "Vouchers");
+                await DoBulkCopy(false, reader, "OnlineVouchers");
             }
             catch (DbUpdateException)
             {
