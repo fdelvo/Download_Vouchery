@@ -43,7 +43,6 @@ namespace Download_Vouchery.ViewModels
         public string FileName { get; set; }
         public long FileSizeInBytes { get; set; }
         public long FileSizeInKb { get { return (long)Math.Ceiling((double)FileSizeInBytes / 1024); } }
-        public double FileSizeInMb { get { return (double)FileSizeInKb / 1024; } }
         public virtual ApplicationUser FileOwner { get; set; }
     }
 }

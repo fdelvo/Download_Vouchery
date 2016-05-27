@@ -16,7 +16,6 @@
                 <ul>
                     <li><a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
                     <li>Size in Kb: {{f.FileSizeInKb}}</li>
-                    <li>Size in Mb: {{f.FileSizeInMb}}</li>
                     <li>Owner: {{f.FileOwner.UserName}}</li>
                     <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
                     <li ng-show="newVoucherForm">
