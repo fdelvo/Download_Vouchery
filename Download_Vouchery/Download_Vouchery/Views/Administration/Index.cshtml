@@ -12,12 +12,12 @@
     </div>
     <div class="card-wrapper">
         <div class="card-inline" ng-init="GetFiles()">
-            <div ng-repeat="f in files track by f.FileId">
+            <div ng-repeat="f in files track by f.FileId" class="file-overview">
                 <ul>
                     <li><a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
-                    <li>{{f.FileUrl}}</li>
-                    <li>{{f.FileSizeInBytes}}</li>
-                    <li>{{f.FileOwner.UserName}}</li>
+                    <li>Size in Kb: {{f.FileSizeInKb}}</li>
+                    <li>Size in Mb: {{f.FileSizeInMb}}</li>
+                    <li>Owner: {{f.FileOwner.UserName}}</li>
                     <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
                     <li ng-show="newVoucherForm">
                         <form role="form" ng-submit="CreateVoucher(f.FileId, $index)">

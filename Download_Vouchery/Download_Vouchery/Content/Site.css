@@ -20,6 +20,10 @@ h3 {
   font-size: 0.874rem;
 }
 
+sup {
+    font-size: 1rem;
+}
+
 
 /* Set padding to keep content from hitting the edges */
 .index {
@@ -208,17 +212,37 @@ input[type="text"], input[type="number"], input[type="password"] {
     outline-color: #671AA6 !important;
 }
 
+.file-overview {
+    border-bottom: 0.1rem solid rgba(0,0,0,0.37);
+    margin-bottom: 2rem;
+}
+
+.file-overview:last-child {
+    border-bottom: none;
+}
+
+.file-overview ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 @media(max-width: 1170px) {
     body {
         width: 100%;
     }
 
-    .file-overview {
-        display: block;
+    .index {
+        width: 100% !important;
     }
 
-    .file-options {
-        display: block;
+    .redeem-code-form {
+        width: 100%;
+    }
+
+    .redeem-code-form input[type="text"] {
+        height: auto;
+        font-size: 1rem;
     }
 
     .card {
@@ -227,6 +251,38 @@ input[type="text"], input[type="number"], input[type="password"] {
         margin-left: 0;
         box-sizing: border-box;
         word-wrap: break-word;
+        padding: 1rem;
+    }
+
+    .card-inline {
+        display: block;
+        width: 100%;
+        vertical-align: unset;
+        white-space: unset;
+        word-wrap: break-word;
+        box-sizing: border-box;
+        max-width: unset;
+        padding: 1rem;
+    }
+
+    .card-inline div ul li {
+        word-wrap: break-word;
+    }
+
+    .card-inline:last-child {
+        padding-right: 1rem;
+    }
+
+    .card-inline:first-child {
+        padding-left: 1rem;
+    }
+
+    .card-wrapper {
+        background: white;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+        word-wrap: break-word;
+        white-space: unset;
+        margin: 0;
     }
 
     main {

@@ -1,4 +1,5 @@
 ﻿using Download_Vouchery.Models;
+using Download_Vouchery.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -28,10 +29,26 @@ namespace Download_Vouchery.Controllers
             return manager;
         }
 
-        public IQueryable<BlobUploadModel> GetBlobs()
+        public async Task<IHttpActionResult> GetBlobs()
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
-            return db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id);
+
+            var uploadModels = await db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id).ToListAsync();
+
+            var uploadModelStrippedList = new List<BlobUploadModelViewModel> ();
+
+            foreach (BlobUploadModel i in uploadModels)
+            {
+                var uploadModelStripped = new BlobUploadModelViewModel();
+                uploadModelStripped.FileId = i.FileId;
+                uploadModelStripped.FileName = i.FileName;
+                uploadModelStripped.FileOwner = i.FileOwner;
+                uploadModelStripped.FileSizeInBytes = i.FileSizeInBytes;
+
+                uploadModelStrippedList.Add(uploadModelStripped);
+            }
+
+            return Ok(uploadModelStrippedList);
         }
 
         /// <summary>

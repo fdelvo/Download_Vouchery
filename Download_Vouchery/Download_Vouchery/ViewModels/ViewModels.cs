@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Download_Vouchery.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -38,11 +39,11 @@ namespace Download_Vouchery.ViewModels
 
     public class BlobUploadModelViewModel
     {
-        public string FileId { get; set; }
+        public Guid FileId { get; set; }
         public string FileName { get; set; }
-        public string FileUrl { get; set; }
         public long FileSizeInBytes { get; set; }
-        public string FileOwner { get; set; }
-        public string FileOwnerId { get; set; }
+        public long FileSizeInKb { get { return (long)Math.Ceiling((double)FileSizeInBytes / 1024); } }
+        public double FileSizeInMb { get { return (double)FileSizeInKb / 1024; } }
+        public virtual ApplicationUser FileOwner { get; set; }
     }
 }
