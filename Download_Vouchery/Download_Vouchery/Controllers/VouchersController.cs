@@ -32,6 +32,13 @@ namespace Download_Vouchery.Controllers
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
+            var totalCount = db.Vouchers
+                .Where(ui => ui.VoucherFileId.FileOwner.Id == currentUser.Id)
+                .Where(fi => fi.VoucherFileId.FileId == id)
+                .Count();
+
+            var totalPages = Math.Ceiling((double)totalCount / pageSize);
+
             var vouchers = await db.Vouchers
                 .Include(fo => fo.VoucherFileId.FileOwner)
                 .Include(fi => fi.VoucherFileId)
@@ -42,7 +49,14 @@ namespace Download_Vouchery.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            return Ok(vouchers);
+            var result = new
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                Vouchers = vouchers
+            };
+
+            return Ok(result);
         }
 
         [ResponseType(typeof(VoucherInfoViewModel))]

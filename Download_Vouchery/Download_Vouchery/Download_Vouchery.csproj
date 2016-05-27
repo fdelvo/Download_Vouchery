@@ -274,6 +274,10 @@
     <Compile Include="Migrations\201605201538432_online_vouchers_changes.Designer.cs">
       <DependentUpon>201605201538432_online_vouchers_changes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605271334398_remove_online_vouchers.cs" />
+    <Compile Include="Migrations\201605271334398_remove_online_vouchers.Designer.cs">
+      <DependentUpon>201605271334398_remove_online_vouchers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BlobDownloadModel.cs" />
@@ -1176,6 +1180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605201538432_online_vouchers_changes.resx">
       <DependentUpon>201605201538432_online_vouchers_changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605271334398_remove_online_vouchers.resx">
+      <DependentUpon>201605271334398_remove_online_vouchers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

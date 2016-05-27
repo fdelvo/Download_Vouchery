@@ -1,12 +1,17 @@
-﻿<div class="print-instructions card">
-    <h1>Print Vouchers</h1>
-    <p>Wait until the loading spinner disappears.</p>
-    <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
-    <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
-    <p>You can only print a maximum of 1000 vouchers at a time due to performance issues.</p>
-</div>
-<div class="voucher-container" ng-controller="FileController" ng-init="GetVouchers(GetValueAtIndex(5), 0 ,1000)">
-        <div class="voucher" ng-repeat="v in vouchers[pageIndex] track by v.VoucherId">
+﻿<div ng-controller="FileController" ng-init="GetVouchersForPrint(GetValueAtIndex(5),0); ShowBatchOptions()">
+    <div class="print-instructions card">
+        <h1>Print Vouchers</h1>
+        <p>Wait until the loading spinner disappears.</p>
+        <p>Select the batch of vouchers to print:</p>
+        <ul>
+            <li ng-repeat="o in showOptions"><a href="" ng-click="GetVouchers(GetValueAtIndex(5),o,1000)">Batch {{o + 1}}</a></li>
+        </ul>
+        <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
+        <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
+        <p>You can only print a maximum of 1000 vouchers at a time due to performance issues.</p>
+    </div>
+    <div class="voucher-container">
+        <div class="voucher" ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
             <div class="voucher-content">
                 <h1>Download Voucher</h1>
                 <i>for the file: {{v.VoucherFileId.FileName}}</i>
@@ -19,7 +24,7 @@
                 </ol>
                 <code>{{v.VoucherCode}}</code>
             </div>
-        </div> 
+        </div>
+    </div>
 </div>
-
 

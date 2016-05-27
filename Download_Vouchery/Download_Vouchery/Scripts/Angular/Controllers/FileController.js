@@ -12,9 +12,9 @@
         $scope.fileName = "";
         $scope.fileId = "";
         $scope.vouchersInfo = [];
-        var page = 0;
-        var size = 10;
-        $scope.pageIndex = 0;
+        var pageIndex;
+        var pageTotal;
+        var totalCount;
 
         $scope.CreateVoucher = function (fileId, index) {
             $scope.newVoucher.VoucherAmount = $scope.voucherAmount[index];
@@ -22,10 +22,13 @@
         }
 
         $scope.GetVouchers = function (fileId, page, size) {
-            page = 0;
-            $scope.vouchers = [];
-            $scope.pageIndex = 0;
-            $scope.vouchers.push(VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }));
+            if (typeof (page) === 'undefined') page = 0;
+            if (typeof (size) === 'undefined') size = 10;
+            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
+                pageTotal = $scope.vouchers.TotalPages;
+                totalCount = $scope.vouchers.TotalCount;
+                pageIndex = 0;
+            });
             console.log($scope.vouchers);
         }
 
@@ -59,26 +62,52 @@
         };   
 
         $scope.prevPage = function (fileId) {
-            $scope.pageIndex--;
-            if ($scope.pageIndex <= 0) {
-                $scope.pageIndex = 0;
+            if (pageIndex <= 0) {
+                pageIndex = 0;
+            } else {
+                pageIndex--;
+                if (typeof (size) === 'undefined') size = 10;
+                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size });
+                $scope.vouchers = $scope.vouchersTemp;
             }
         };
 
         $scope.nextPage = function (fileId) {
-            page++;
-            $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
-                if ($scope.vouchersTemp.length > 0) {
-                    $scope.vouchers.push($scope.vouchersTemp);
-                    $scope.pageIndex++;
-                }
-            });
+            pageIndex++;
+            if (typeof (size) === 'undefined') size = 10;
+            if (pageIndex < pageTotal) {
+                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size });
+                $scope.vouchers = $scope.vouchersTemp;
+            } else {
+                pageIndex--;
+            }
         };
 
         $scope.GetValueAtIndex = function (index) {
             var str = window.location.href;
             console.log(str.split("/")[index])
             return str.split("/")[index];
+        }
+
+        $scope.GetVouchersForPrint = function (fileId, page) {
+            if (typeof (page) === 'undefined') page = 0;
+            var size = 1000;
+            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
+                pageTotal = $scope.vouchers.TotalPages;
+                totalCount = $scope.vouchers.TotalCount;
+                pageIndex = 0;
+                $scope.ShowBatchOptions();
+            });
+            console.log($scope.vouchers);
+        }
+
+        $scope.ShowBatchOptions = function () {
+            var optionsAmount = Math.ceil(totalCount / 1000);
+            $scope.showOptions = [];
+            for (i = 0; i < optionsAmount; i++) {
+                $scope.showOptions.push(i);
+            }
+            console.log($scope.showOptions);
         }
     }
 })();

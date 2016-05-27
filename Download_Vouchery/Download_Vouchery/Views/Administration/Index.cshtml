@@ -37,7 +37,7 @@
                 <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
                 <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
                 <li>Average redemption frequency per voucher: {{vouchersInfo.VoucherRedemptionFrequency}}</li>
-                <li><a href="http://localhost:54809/Administration/PrintVouchers/{{vouchers[0][0].VoucherFileId.FileId}}">Print vouchers</a></li>
+                <li><a href="http://localhost:54809/Administration/PrintVouchers/{{vouchers.Vouchers[0].VoucherFileId.FileId}}">Print vouchers</a></li>
             </ul>
             <table class="voucher-table">
                 <thead>
@@ -50,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="v in vouchers[pageIndex] track by v.VoucherId">
+                    <tr ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
                         <td>{{v.VoucherCode}}</td>
                         <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
                         <td>{{v.VoucherRedeemed}}</td>
