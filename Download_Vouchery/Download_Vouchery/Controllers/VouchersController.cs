@@ -34,8 +34,7 @@ namespace Download_Vouchery.Controllers
 
             var totalCount = db.Vouchers
                 .Where(ui => ui.VoucherFileId.FileOwner.Id == currentUser.Id)
-                .Where(fi => fi.VoucherFileId.FileId == id)
-                .Count();
+                .Count(fi => fi.VoucherFileId.FileId == id);
 
             var totalPages = Math.Ceiling((double)totalCount / pageSize);
 
@@ -63,16 +62,18 @@ namespace Download_Vouchery.Controllers
         public async Task<IHttpActionResult> GetVouchersInfo(Guid id)
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
-            VoucherInfoViewModel voucherInfo = new VoucherInfoViewModel();
+            VoucherInfoViewModel voucherInfo = new VoucherInfoViewModel
+            {
+                VoucherAmount = await db.Vouchers
+                    .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
+                                     i.VoucherFileId.FileId == id),
+                VoucherAmountRedeemed = await db.Vouchers
+                    .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
+                                     i.VoucherFileId.FileId == id &&
+                                     i.VoucherRedeemed == true)
+            };
 
-            voucherInfo.VoucherAmount = await db.Vouchers
-                .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
-                    i.VoucherFileId.FileId == id);
 
-            voucherInfo.VoucherAmountRedeemed = await db.Vouchers
-                .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
-                    i.VoucherFileId.FileId == id &&
-                    i.VoucherRedeemed == true);
 
             voucherInfo.VoucherAmountNotRedeemed = voucherInfo.VoucherAmount - voucherInfo.VoucherAmountRedeemed;
 
@@ -193,14 +194,9 @@ namespace Download_Vouchery.Controllers
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> PostVoucher(VoucherViewModel vm, string id)
         {
-            var proceed = true;
+            var proceed = !(!ModelState.IsValid || vm.VoucherAmount > 10000);
 
-            if (!ModelState.IsValid || vm.VoucherAmount > 10000)
-            {
-                proceed = false;
-            }
-
-            if (db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).Any() == true)
+            if (db.Vouchers.Any(fi => fi.VoucherFileId.FileId == new Guid(id)))
             {
                 var check = await db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
                 if (check >= 10000 || check + vm.VoucherAmount > 10000)
@@ -211,16 +207,15 @@ namespace Download_Vouchery.Controllers
 
             if (proceed == false)
             {
-                return BadRequest("Validation failed or you tried to create more than 10000 vouchers at once.");
+                return BadRequest("Validation failed or you tried to create more than 10000 vouchers.");
             }
 
             var voucherFile = db.BlobUploadModels.Find(new Guid(id));
             LinkedList<VoucherBulkInsertViewModel> temp = new LinkedList<VoucherBulkInsertViewModel>();
 
             for (int i = 0; i < vm.VoucherAmount; i++) {
-                var voucher = new VoucherBulkInsertViewModel();
+                var voucher = new VoucherBulkInsertViewModel {VoucherId = Guid.NewGuid()};
 
-                voucher.VoucherId = Guid.NewGuid();
                 voucher.VoucherCode = voucher.VoucherId.ToString().Substring(0,8);
                 voucher.VoucherCreationDate = DateTime.Now;
                 voucher.VoucherRedeemed = false;

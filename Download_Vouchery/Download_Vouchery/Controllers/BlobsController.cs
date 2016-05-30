@@ -74,7 +74,7 @@ namespace Download_Vouchery.Controllers
                 }
 
                 // Otherwise
-                return BadRequest();
+                return BadRequest("Upload failed.");
             }
             catch (Exception ex)
             {

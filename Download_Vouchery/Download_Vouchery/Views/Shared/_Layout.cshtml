@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Download Vouchery</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/angular")
@@ -33,11 +33,17 @@
     </nav>
     <main>
         @RenderBody()
-        <footer>
+        <footer class="card">
+            <a href="/Home/Impressum">Impressum</a>
         </footer>
     </main>
     <div id="loaderDiv" ng-show="showLoader" loader>
         <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
+    </div>
+    <div class="error" ng-show="error">
+        <div class="error-content">
+            {{error}} <a href="" ng-click="error = false">Close</a>
+        </div>
     </div>
 </body>
 </html>

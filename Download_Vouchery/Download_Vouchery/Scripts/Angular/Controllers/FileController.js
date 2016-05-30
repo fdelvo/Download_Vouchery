@@ -1,9 +1,9 @@
 ﻿(function () {
     angular.module('DownloadVoucheryApp').controller('FileController', FileController);
 
-    FileController.$inject = ['$scope', '$filter', '$route', '$http', 'FileFactory', 'UploadFactory', 'VoucherFactory'];
+    FileController.$inject = ['$scope', '$rootScope', '$filter', '$route', '$http', 'FileFactory', 'UploadFactory', 'VoucherFactory'];
 
-    function FileController($scope, $filter, $route, $http, FileFactory, UploadFactory, VoucherFactory) {
+    function FileController($scope, $rootScope, $filter, $route, $http, FileFactory, UploadFactory, VoucherFactory) {
         $scope.files = [];
         $scope.vouchers = [];
         $scope.newVoucher = new VoucherFactory();
@@ -18,7 +18,9 @@
 
         $scope.CreateVoucher = function (fileId, index) {
             $scope.newVoucher.VoucherAmount = $scope.voucherAmount[index];
-            $scope.newVoucher.$save({ id: fileId }, function () { window.location.reload(); });
+            $scope.newVoucher.$save({ id: fileId }, function () { window.location.reload(); }, function(error) {
+                $rootScope.error = error.data.Message;
+            });
         }
 
         $scope.GetVouchers = function (fileId, page, size) {
@@ -67,8 +69,9 @@
             } else {
                 pageIndex--;
                 if (typeof (size) === 'undefined') size = 10;
-                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size });
-                $scope.vouchers = $scope.vouchersTemp;
+                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size }, function () {
+                    $scope.vouchers = $scope.vouchersTemp;
+                });
             }
         };
 
@@ -76,8 +79,9 @@
             pageIndex++;
             if (typeof (size) === 'undefined') size = 10;
             if (pageIndex < pageTotal) {
-                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size });
-                $scope.vouchers = $scope.vouchersTemp;
+                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size }, function() {
+                    $scope.vouchers = $scope.vouchersTemp;
+                });               
             } else {
                 pageIndex--;
             }

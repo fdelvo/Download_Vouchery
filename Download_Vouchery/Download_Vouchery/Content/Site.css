@@ -38,6 +38,10 @@ main {
     padding-right: 15px;
 }
 
+footer {
+    padding: 1rem !important;
+}
+
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
@@ -173,7 +177,24 @@ main {
     margin-left: 0;
 }
 
-.index-ul li {
+.error {
+    color: red;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    opacity: .8;
+    text-align: center;
+    height: 4rem;
+    border-top: solid 1px #671AA6;
+    font-weight: bold;
+    display: table;
+}
+
+.error-content {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .voucher-container {
