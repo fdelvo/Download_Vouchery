@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Routing;
 
 namespace Download_Vouchery
@@ -30,21 +31,7 @@ namespace Download_Vouchery
             );
 
             config.Routes.MapHttpRoute(
-                "PostVouchers",
-                "voucher/new/{voucherAmount}/{voucherFileId}",
-                new { controller = "Vouchers", action = "PostVoucher" },
-                new { httpMethod = new HttpMethodConstraint("POST") }
-            );
-
-            config.Routes.MapHttpRoute(
-                "GetAllVouchers",
-                "api/vouchers/{id}/all",
-                new { controller = "Vouchers", action = "GetAllVouchers" },
-                new { httpMethod = new HttpMethodConstraint("GET") }
-            );
-
-            config.Routes.MapHttpRoute(
-                "GetVouchers",
+                "GetVouchersPaged",
                 "api/vouchers/{id}/{pageIndex}/{pageSize}",
                 new { controller = "Vouchers", action = "GetVouchers" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
@@ -55,6 +42,34 @@ namespace Download_Vouchery
                 "api/vouchers/getvouchersinfo/{id}",
                 new { controller = "Vouchers", action = "GetVouchersInfo" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "GetVoucherDetails",
+                "api/vouchers/voucher/{id}",
+                new { controller = "Vouchers", action = "GetVoucherDetails" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "ResetVoucher",
+                "api/vouchers/voucher/{id}/reset",
+                new { controller = "Vouchers", action = "PutVoucher" },
+                new { httpMethod = new HttpMethodConstraint("PUT") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "PostVoucher",
+                "api/vouchers/new/{voucherAmount}/{id}",
+                new { controller = "Vouchers", action = "PostVoucher" },
+                new { httpMethod = new HttpMethodConstraint("POST") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "Delete",
+                "api/vouchers/voucher/{id}/delete",
+                new { controller = "Vouchers", action = "DeleteVoucher" },
+                new { httpMethod = new HttpMethodConstraint("DELETE") }
             );
 
             config.Routes.MapHttpRoute(

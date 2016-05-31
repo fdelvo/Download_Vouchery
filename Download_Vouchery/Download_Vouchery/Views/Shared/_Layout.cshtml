@@ -40,9 +40,9 @@
     <div id="loaderDiv" ng-show="showLoader" loader>
         <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
     </div>
-    <div class="error" ng-show="error">
-        <div class="error-content">
-            {{error}} <a href="" ng-click="error = false">Close</a>
+    <div class="status" ng-show="status">
+        <div class="status-content">
+            {{status}} <a href="" ng-click="status = false">Close</a>
         </div>
     </div>
 </body>

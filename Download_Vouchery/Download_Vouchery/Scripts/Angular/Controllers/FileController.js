@@ -17,16 +17,15 @@
         var totalCount;
 
         $scope.CreateVoucher = function (fileId, index) {
-            $scope.newVoucher.VoucherAmount = $scope.voucherAmount[index];
-            $scope.newVoucher.$save({ id: fileId }, function () { window.location.reload(); }, function(error) {
-                $rootScope.error = error.data.Message;
+            $scope.newVoucher.$PostVouchers({ voucherAmount: $scope.voucherAmount[index], voucherFileId: fileId }, function () { $rootScope.status = "Vouchers created." }, function(error) {
+                $rootScope.status = error.data.Message;
             });
         }
 
         $scope.GetVouchers = function (fileId, page, size) {
             if (typeof (page) === 'undefined') page = 0;
             if (typeof (size) === 'undefined') size = 10;
-            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
+            $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size }, function () {
                 pageTotal = $scope.vouchers.TotalPages;
                 totalCount = $scope.vouchers.TotalCount;
                 pageIndex = 0;
@@ -34,8 +33,19 @@
             console.log($scope.vouchers);
         }
 
+        $scope.GetVoucherBatch = function (fileId, page, size) {
+            if (typeof (page) === 'undefined') page = 0;
+            if (typeof (size) === 'undefined') size = 10;
+            $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size }, function () {
+                pageTotal = $scope.vouchers.TotalPages;
+                totalCount = $scope.vouchers.TotalCount;
+                pageIndex = 0;
+                $rootScope.status = "Batch " + (page + 1) + " ready.";
+            });
+        }
+
         $scope.GetVouchersInfo = function (fileId) {
-            $scope.vouchersInfo = $http.get(' http://localhost:54809/api/vouchers/getvouchersinfo/' + fileId).then(function (response) { $scope.vouchersInfo = response.data});
+            $scope.vouchersInfo = VoucherFactory.GetVouchersInfo({ id: fileId });
         }
 
         $scope.GetAllVouchers = function (fileId) {
@@ -69,7 +79,7 @@
             } else {
                 pageIndex--;
                 if (typeof (size) === 'undefined') size = 10;
-                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size }, function () {
+                $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: pageIndex, pageSize: size }, function () {
                     $scope.vouchers = $scope.vouchersTemp;
                 });
             }
@@ -79,7 +89,7 @@
             pageIndex++;
             if (typeof (size) === 'undefined') size = 10;
             if (pageIndex < pageTotal) {
-                $scope.vouchersTemp = VoucherFactory.query({ id: fileId, pageIndex: pageIndex, pageSize: size }, function() {
+                $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: pageIndex, pageSize: size }, function() {
                     $scope.vouchers = $scope.vouchersTemp;
                 });               
             } else {
@@ -96,11 +106,12 @@
         $scope.GetVouchersForPrint = function (fileId, page) {
             if (typeof (page) === 'undefined') page = 0;
             var size = 1000;
-            $scope.vouchers = VoucherFactory.query({ id: fileId, pageIndex: page, pageSize: size }, function () {
+            $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size }, function () {
                 pageTotal = $scope.vouchers.TotalPages;
                 totalCount = $scope.vouchers.TotalCount;
                 pageIndex = 0;
                 $scope.ShowBatchOptions();
+                $rootScope.status = "Batch 1 ready to print."
             });
             console.log($scope.vouchers);
         }
@@ -112,6 +123,25 @@
                 $scope.showOptions.push(i);
             }
             console.log($scope.showOptions);
+        }
+
+        $scope.ResetVoucher = function (voucherId) {
+            var voucher = VoucherFactory.GetVoucherDetails({id: voucherId }, function () { 
+                    voucher.VoucherRedeemed = false;
+                    voucher.VoucherRedemptionDate = null;
+                    voucher.VoucherRedemptionCounter = 0;
+                    $id = voucherId;
+                    VoucherFactory.Reset({ id: $id }, voucher, function () {
+                        $rootScope.status = "Voucher reset.";
+                    });
+                }
+            );
+        }
+
+        $scope.DeleteVouchers = function (voucherId) {
+            VoucherFactory.DeleteVouchers({ id: voucherId }, function () {
+                $rootScope.status = "Voucher deleted.";
+            });
         }
     }
 })();

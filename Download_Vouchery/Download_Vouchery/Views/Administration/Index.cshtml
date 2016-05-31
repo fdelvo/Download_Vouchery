@@ -46,6 +46,7 @@
                         <th>Redeemed</th>
                         <th>Redemption Date</th>
                         <th>Redemption frequency</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,7 @@
                         <td>{{v.VoucherRedeemed}}</td>
                         <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
                         <td>{{v.VoucherRedemptionCounter}}</td>
+                        <td><a href="" ng-click="ResetVoucher(v.VoucherId)">Reset</a> <a href="" ng-click="DeleteVouchers(v.VoucherId)">Delete</a></td>
                     </tr>
                 </tbody>
                 <tfoot>

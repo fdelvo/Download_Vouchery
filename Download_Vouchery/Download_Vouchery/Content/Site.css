@@ -143,6 +143,7 @@ footer {
    z-index: 1100;
    background-color: white;
    opacity: .8;
+   border-top: solid 1px #671AA6;
 }
 
 .ajax-loader {
@@ -177,7 +178,7 @@ footer {
     margin-left: 0;
 }
 
-.error {
+.status {
     color: red;
     position: fixed;
     bottom: 0;
@@ -192,7 +193,7 @@ footer {
     display: table;
 }
 
-.error-content {
+.status-content {
     display: table-cell;
     vertical-align: middle;
 }
@@ -358,6 +359,14 @@ input[type="text"], input[type="number"], input[type="password"] {
 
     .voucher-container {
         display: block;
+    }
+
+    footer {
+        display: none;
+    }
+
+    .status, -status-contet {
+        display: none;
     }
 
     .voucher {

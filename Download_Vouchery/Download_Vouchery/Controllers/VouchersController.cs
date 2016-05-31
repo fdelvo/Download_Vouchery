@@ -27,7 +27,6 @@ namespace Download_Vouchery.Controllers
             return manager;
         }
 
-        // GET: api/Vouchers
         public async Task<IHttpActionResult> GetVouchers(Guid id, int pageIndex = 0, int pageSize = 10)
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
@@ -93,7 +92,6 @@ namespace Download_Vouchery.Controllers
             return Ok(voucherInfo);
         }
 
-        // GET: api/Vouchers/5
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> GetVoucherDetails(Guid id)
         {
@@ -106,7 +104,6 @@ namespace Download_Vouchery.Controllers
             return Ok(voucher);
         }
 
-        // PUT: api/Vouchers/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutVoucher(Guid id, Voucher voucher)
         {
@@ -192,14 +189,14 @@ namespace Download_Vouchery.Controllers
 
         // POST: api/Vouchers
         [ResponseType(typeof(Voucher))]
-        public async Task<IHttpActionResult> PostVoucher(VoucherViewModel vm, string id)
+        public async Task<IHttpActionResult> PostVoucher(int voucherAmount, string id)
         {
-            var proceed = !(!ModelState.IsValid || vm.VoucherAmount > 10000);
+            var proceed = !(!ModelState.IsValid || voucherAmount > 10000);
 
             if (db.Vouchers.Any(fi => fi.VoucherFileId.FileId == new Guid(id)))
             {
                 var check = await db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
-                if (check >= 10000 || check + vm.VoucherAmount > 10000)
+                if (check >= 10000 || check + voucherAmount > 10000)
                 {
                     proceed = false;
                 }
@@ -213,7 +210,7 @@ namespace Download_Vouchery.Controllers
             var voucherFile = db.BlobUploadModels.Find(new Guid(id));
             LinkedList<VoucherBulkInsertViewModel> temp = new LinkedList<VoucherBulkInsertViewModel>();
 
-            for (int i = 0; i < vm.VoucherAmount; i++) {
+            for (int i = 0; i < voucherAmount; i++) {
                 var voucher = new VoucherBulkInsertViewModel {VoucherId = Guid.NewGuid()};
 
                 voucher.VoucherCode = voucher.VoucherId.ToString().Substring(0,8);
