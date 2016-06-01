@@ -95,12 +95,13 @@ namespace Download_Vouchery.Controllers
         public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode)
         {
             var voucher = db.Vouchers.Where(i => i.VoucherCode == voucherCode).FirstOrDefault();
-            var blob = voucher.VoucherFileId;
 
             if (voucher == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
+
+            var blob = voucher.VoucherFileId;
 
             if (blob.FileId != voucher.VoucherFileId.FileId)
             {

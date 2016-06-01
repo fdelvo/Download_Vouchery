@@ -29,7 +29,7 @@ namespace Download_Vouchery
             var myMessage = new SendGridMessage();
             myMessage.AddTo(message.Destination);
             myMessage.From = new System.Net.Mail.MailAddress(
-                                "support@downloadvouchery.com", "Florian D.");
+                                "support@downloadvouchery.com", "Download Vouchery");
             myMessage.Subject = message.Subject;
             myMessage.Text = message.Body;
             myMessage.Html = message.Body;

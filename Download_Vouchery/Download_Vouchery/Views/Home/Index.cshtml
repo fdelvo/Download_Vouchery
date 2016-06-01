@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Info";
+    ViewBag.Title = "Index";
 }
 <div class="index">
     <div class="card">
@@ -18,10 +18,10 @@
     <div ng-controller="VoucherController" class="redeem-code card">
         <h2>You got a voucher code?</h2>
         <p>Great! Just type your code in and click download.</p>
-        <form class="redeem-code-form">
+        <form class="redeem-code-form" ng-submit="Download()">
             <input type="text" placeholder="Download Code" ng-model="download.VoucherCode" />
             <br />
-            <a class="button" ng-href="/blobs/{{download.VoucherCode}}/download">Download</a>
+            <input class="button" type="submit" value="Download" />
         </form>
     </div>
 </div>

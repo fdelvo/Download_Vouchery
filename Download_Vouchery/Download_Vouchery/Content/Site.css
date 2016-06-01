@@ -1,5 +1,7 @@
 ﻿html {
     font-family: 'Roboto', sans-serif;
+    min-height: 100%;
+    position: relative;
 }
 
 body {
@@ -36,10 +38,31 @@ main {
     margin-top: 1rem;
     padding-left: 15px;
     padding-right: 15px;
+    padding-bottom: 5.5rem;
 }
 
 footer {
-    padding: 1rem !important;
+    background-color: #671AA6;
+    color: white;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    height: 5rem;
+    display: table;
+    width: 100%;
+}
+
+.footer-content {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 1rem;
+}
+
+footer a {
+    color: white;
+    display: inline;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -185,7 +208,6 @@ footer {
     left: 0;
     width: 100%;
     background-color: white;
-    opacity: .8;
     text-align: center;
     height: 4rem;
     border-top: solid 1px #671AA6;
@@ -249,9 +271,17 @@ input[type="text"], input[type="number"], input[type="password"] {
     list-style: none;
 }
 
+.mobile-vouchers-overview {
+    display: none;
+}
+
 @media(max-width: 1170px) {
     body {
         width: 100%;
+    }
+
+    .mobile-vouchers-overview {
+        display: block;
     }
 
     .index {
@@ -304,12 +334,18 @@ input[type="text"], input[type="number"], input[type="password"] {
         box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
         word-wrap: break-word;
         white-space: unset;
-        margin: 0;
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
     }
 
     main {
-        padding: 0;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
         margin-top: 0.1rem;
+        padding-bottom: 5rem;
     }
 
     .desktop {
