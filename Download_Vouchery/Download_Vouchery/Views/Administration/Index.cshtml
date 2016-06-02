@@ -5,9 +5,18 @@
 
 <div ng-controller="FileController">
     <div class="file-upload card">
-        <form role="form" ng-submit="uploadFile()">
+        <h2>Upload a file</h2>
+        <form role="form" ng-submit="UploadFile()">
             <input type="file" name="file1" file-model="myFile"/>
             <input class="button" type="submit" value="Upload"/>
+        </form>
+    </div>
+    <div class="file-upload card">
+        <h2>Upload an image for your vouchers</h2>
+        <p>For an optimal result your image should be 561px high and 793px wide.</p>
+        <form role="form" ng-submit="UploadVoucherImage()">
+            <input type="file" name="file1" file-model="myFile" />
+            <input class="button" type="submit" value="Upload" />
         </form>
     </div>
     <div class="card-wrapper">

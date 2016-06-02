@@ -9,9 +9,10 @@
         <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
         <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
         <p>You can only print a maximum of 1000 vouchers at a time due to performance issues.</p>
+        <p>For an optimal result choose the DIN A4 format.</p>
     </div>
-    <div class="voucher-container">
         <div class="voucher" ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
+            <img class="voucher-image" ng-init="DisplayVoucherImageUrl()" ng-src="{{voucherImage}}" />
             <div class="voucher-content">
                 <h1>Download Voucher</h1>
                 <i>for the file: {{v.VoucherFileId.FileName}}</i>
@@ -23,8 +24,8 @@
                     <li>Enter the following code and click "Download"</li>
                 </ol>
                 <code>{{v.VoucherCode}}</code>
+                <br />
             </div>
         </div>
-    </div>
 </div>
 

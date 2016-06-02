@@ -22,6 +22,13 @@
             });
         }
 
+        $scope.DisplayVoucherImageUrl = function () {
+            FileFactory.GetVoucherImageUrl(null, function (response) {
+                $scope.voucherImage = response.FileUrl;
+            });
+      
+        }
+
         $scope.GetVouchers = function (fileId, page, size) {
             if (typeof (page) === 'undefined') page = 0;
             if (typeof (size) === 'undefined') size = 10;
@@ -63,15 +70,27 @@
             $scope.files = FileFactory.query();
         }
 
-        $scope.uploadFile = function () {
+        $scope.UploadFile = function () {
             var file = $scope.myFile;
 
             console.log('file is ');
             console.dir(file);
 
-            var uploadUrl = "/blobs/upload";
+            var uploadUrl = "/api/blobs/upload";
             UploadFactory.uploadFileToUrl(file, uploadUrl);
-        };   
+        };
+
+        $scope.UploadVoucherImage = function () {
+            var file = $scope.myFile;
+
+            
+            if (file.type === 'image/png') {
+                var uploadUrl = "/api/blobs/uploadvoucherimage";
+                UploadFactory.uploadFileToUrl(file, uploadUrl);
+            } else {
+                $rootScope.status = 'Only PNG files are allowed';
+            }
+        };
 
         $scope.prevPage = function (fileId) {
             if (pageIndex <= 0) {

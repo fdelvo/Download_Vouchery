@@ -29,6 +29,7 @@ namespace Download_Vouchery.Controllers
             return manager;
         }
 
+
         public async Task<IHttpActionResult> GetBlobs()
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
@@ -80,6 +81,47 @@ namespace Download_Vouchery.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+        [ResponseType(typeof(List<BlobUploadModel>))]
+        public async Task<IHttpActionResult> PostVoucherImage()
+        {
+            try
+            {
+                // This endpoint only supports multipart form data
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    return StatusCode(HttpStatusCode.UnsupportedMediaType);
+                }
+
+                // Call service to perform upload, then check result to return as content
+                var result = await _service.UploadVoucherImage(Request.Content);
+                if (result != null && result.Count > 0)
+                {
+                    return Ok(result);
+                }
+
+                // Otherwise
+                return BadRequest("Upload failed.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [ResponseType(typeof(BlobUploadModel))]
+        [HttpGet]
+        [AcceptVerbs("GET")]
+        public async Task<IHttpActionResult> VoucherImage()
+        {
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
+
+            var voucherImage = await db.BlobUploadModels.FirstOrDefaultAsync(x => 
+                x.FileOwner.Id == currentUser.Id
+                && x.FileUrl.Contains("ProfilePicture"));
+
+            return Ok(voucherImage);
         }
 
         private bool VoucherExists(Guid id)

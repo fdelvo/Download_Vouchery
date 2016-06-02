@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using System.Web.Routing;
 
 namespace Download_Vouchery
@@ -18,15 +17,36 @@ namespace Download_Vouchery
 
             config.Routes.MapHttpRoute(
             "PostBlobUpload",
-            "blobs/upload",
+            "api/blobs/upload",
             new { controller = "Blobs", action = "PostBlobUpload" },
             new { httpMethod = new HttpMethodConstraint("POST") }
         );
 
             config.Routes.MapHttpRoute(
+                "PostVoucherImage",
+                "api/blobs/uploadvoucherimage",
+                new { controller = "Blobs", action = "PostVoucherImage" },
+                new { httpMethod = new HttpMethodConstraint("POST") }
+            );
+
+            config.Routes.MapHttpRoute(
                 "GetBlobDownload",
-                "blobs/{voucherCode}/download",
+                "api/blobs/{voucherCode}/download",
                 new { controller = "Blobs", action = "GetBlobDownload" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "GetVoucherImage",
+                "api/blobs/voucherimage/displayurl",
+                new { controller = "Blobs", action = "VoucherImage" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "GetFiles",
+                "api/blobs/getfiles",
+                new { controller = "Blobs", action = "GetBlobs" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
             );
 
@@ -70,12 +90,6 @@ namespace Download_Vouchery
                 "api/vouchers/voucher/{id}/delete",
                 new { controller = "Vouchers", action = "DeleteVoucher" },
                 new { httpMethod = new HttpMethodConstraint("DELETE") }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
             );
         }
     }

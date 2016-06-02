@@ -16,6 +16,7 @@ namespace Download_Vouchery.Controllers
     public interface IBlobService
     {
         Task<List<BlobUploadModel>> UploadBlobs(HttpContent httpContent);
+        Task<List<BlobUploadModel>> UploadVoucherImage(HttpContent httpContent);
         Task<BlobDownloadModel> DownloadBlob(Guid blobId);
     }
 
@@ -49,6 +50,54 @@ namespace Download_Vouchery.Controllers
 
             foreach (var item in list)
             {
+                item.FileId = Guid.NewGuid();
+                item.FileOwner = currentUser;
+                db.BlobUploadModels.Add(item);
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (BlobUploadModelExists(item.FileId))
+                    {
+                        throw;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public async Task<List<BlobUploadModel>> UploadVoucherImage(HttpContent httpContent)
+        {
+            var blobUploadProvider = new BlobStorageVoucherImageUploadProvider();
+
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
+
+            var list = await httpContent.ReadAsMultipartAsync(blobUploadProvider)
+                .ContinueWith(task =>
+                {
+                    if (task.IsFaulted || task.IsCanceled)
+                    {
+                        throw task.Exception;
+                    }
+
+                    var provider = task.Result;
+                    return provider.Uploads.ToList();
+                });
+
+            foreach (var item in list)
+            {
+                if (db.BlobUploadModels.Any(x => x.FileName == item.FileName))
+                {
+                    continue;
+                }
+
                 item.FileId = Guid.NewGuid();
                 item.FileOwner = currentUser;
                 db.BlobUploadModels.Add(item);

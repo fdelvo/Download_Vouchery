@@ -220,7 +220,7 @@ footer a {
     vertical-align: middle;
 }
 
-.voucher-container {
+.voucher {
     display: none;
 }
 
@@ -405,24 +405,28 @@ input[type="text"], input[type="number"], input[type="password"] {
         display: none;
     }
 
-    .voucher {
-        width: 100%;
-        height: 50%;
-        text-align: center;
-        display: table;
-        border-bottom: 1px solid black;
-        box-sizing: border-box;
+    .voucher-image {
+        height: 148.5mm;
+        width: 210mm;
+        opacity: 0.15;
     }
 
-    html, body, .voucher-container {
+    html, body, .voucher {
         width: 210mm;
         height: 297mm;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        display: block;
     }
 
     .voucher-content {
-        display: table-cell;
-        vertical-align: middle;
-        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 25mm;
+        width: 210mm;
+        text-align: center;
+        font-size: 18px;
     }
 
     .mobile {
