@@ -409,6 +409,9 @@ input[type="text"], input[type="number"], input[type="password"] {
         height: 148.5mm;
         width: 210mm;
         opacity: 0.15;
+        top: 0;
+        left: 0;
+        border: 1px solid black;
     }
 
     html, body, .voucher {
@@ -416,7 +419,6 @@ input[type="text"], input[type="number"], input[type="password"] {
         height: 297mm;
         text-align: center;
         position: relative;
-        box-sizing: border-box;
         display: block;
     }
 

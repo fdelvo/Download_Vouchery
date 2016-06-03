@@ -1,4 +1,7 @@
-﻿<div ng-controller="FileController" ng-init="GetVouchersForPrint(GetValueAtIndex(5),0); ShowBatchOptions()">
+﻿@{
+    ViewBag.Title = "Print Vouchers";
+}
+<div ng-controller="FileController" ng-init="GetVouchersForPrint(GetValueAtIndex(5),0); ShowBatchOptions(); DisplayVoucherImageUrl()">
     <div class="print-instructions card">
         <h1>Print Vouchers</h1>
         <p>Wait until the loading spinner disappears.</p>
@@ -12,7 +15,7 @@
         <p>For an optimal result choose the DIN A4 format.</p>
     </div>
         <div class="voucher" ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
-            <img class="voucher-image" ng-init="DisplayVoucherImageUrl()" ng-src="{{voucherImage}}" />
+            <img class="voucher-image" ng-src="{{voucherImage}}" />
             <div class="voucher-content">
                 <h1>Download Voucher</h1>
                 <i>for the file: {{v.VoucherFileId.FileName}}</i>
