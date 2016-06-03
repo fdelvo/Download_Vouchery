@@ -98,6 +98,13 @@ namespace Download_Vouchery.Controllers
                     continue;
                 }
 
+                if (db.BlobUploadModels.Any(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures")))
+                {
+                    var blob = db.BlobUploadModels.Where(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures")).FirstOrDefault();
+                    db.BlobUploadModels.Remove(blob);
+                    await db.SaveChangesAsync();
+                }
+
                 item.FileId = Guid.NewGuid();
                 item.FileOwner = currentUser;
                 db.BlobUploadModels.Add(item);
