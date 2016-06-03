@@ -34,7 +34,7 @@ namespace Download_Vouchery.Controllers
         {
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
-            var uploadModels = await db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id).ToListAsync();
+            var uploadModels = await db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id && !o.FileUrl.Contains("profilepictures")).ToListAsync();
 
             var uploadModelStrippedList = new List<BlobUploadModelViewModel> ();
 
