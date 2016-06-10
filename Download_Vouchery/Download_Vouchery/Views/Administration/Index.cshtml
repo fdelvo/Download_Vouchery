@@ -29,6 +29,7 @@
                     <li>Owner: {{f.FileOwner.UserName}}</li>
                     <li>
                         <a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a>
+                        <a href="" ng-click="DeleteFile(f.FileId)">Delete File</a>
                     </li>
                     <li ng-show="newVoucherForm">
                         <form role="form" ng-submit="CreateVoucher(f.FileId, $index)">

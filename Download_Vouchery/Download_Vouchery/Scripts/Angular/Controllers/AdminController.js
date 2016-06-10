@@ -174,4 +174,10 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
             $rootScope.status = "Only PNG files are allowed";
         }
     };
+
+    $scope.DeleteFile = function(id) {
+        FileFactory.DeleteBlob({ blobId: id }, function() {
+            $rootScope.status = "File deleted.";
+        });
+    }
 }

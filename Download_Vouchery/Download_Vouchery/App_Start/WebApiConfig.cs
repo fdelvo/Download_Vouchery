@@ -52,6 +52,13 @@ namespace Download_Vouchery
                 new { httpMethod = new HttpMethodConstraint("GET") }
             );
 
+            config.Routes.MapHttpRoute(
+                "DeleteFile",
+                "api/blobs/delete/{blobId}",
+                new { controller = "Blobs", action = "DeleteBlob" },
+                new { httpMethod = new HttpMethodConstraint("DELETE") }
+            );
+
             // Vouchers Controller
 
             config.Routes.MapHttpRoute(

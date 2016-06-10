@@ -8,6 +8,7 @@ function FileFactory($resource) {
         null,
         {
             GetVoucherImageUrl: { method: "GET", url: "/api/blobs/voucherimage/displayurl" },
-            query: { method: "GET", url: "/api/blobs/getfiles", isArray: true }
+            query: { method: "GET", url: "/api/blobs/getfiles", isArray: true },
+            DeleteBlob: { method: "DELETE", url: "/api/blobs/delete/:blobId" }
         });
 }

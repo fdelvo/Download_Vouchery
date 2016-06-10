@@ -57,6 +57,26 @@ namespace Download_Vouchery.Controllers
             return Ok(uploadModelStrippedList);
         }
 
+        public async Task<IHttpActionResult> DeleteBlob(Guid blobId)
+        {
+            try
+            {
+                var result = await _service.DeleteBlob(blobId);
+
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+
+                // Otherwise
+                return BadRequest("Deletion failed.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
         /// <summary>
         /// Uploads one or more blob files.
         /// </summary>

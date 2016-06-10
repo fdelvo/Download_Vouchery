@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Download_Vouchery.Services
         Task<List<BlobUploadModel>> UploadBlobs(HttpContent httpContent);
         Task<List<BlobUploadModel>> UploadVoucherImage(HttpContent httpContent);
         Task<BlobDownloadModel> DownloadBlob(Guid blobId);
+        Task<IHttpActionResult> DeleteBlob(Guid blobId);
     }
 
     public class BlobService : ApiController, IBlobService
@@ -184,6 +186,32 @@ namespace Download_Vouchery.Services
 
             // Otherwise
             return null;
+        }
+
+        public async Task<IHttpActionResult> DeleteBlob(Guid blobId)
+        {
+            var blobName = GetBlobName(blobId);
+            var blobTemp = _db.BlobUploadModels.Find(blobId);
+
+            if (!String.IsNullOrEmpty(blobName))
+            {
+                var container = new BlobHelper().GetBlobContainer(blobTemp.FileOwner.Id);
+                var blob = container.GetBlockBlobReference(blobName);
+
+                await blob.DeleteIfExistsAsync();
+
+                var file = _db.BlobUploadModels.Find(blobId);
+                var vouchersOfFile = await _db.Vouchers.Where(f => f.VoucherFileId.FileId == file.FileId).ToListAsync();
+                _db.BlobUploadModels.Remove(file);
+                _db.Vouchers.RemoveRange(vouchersOfFile);
+
+                await _db.SaveChangesAsync();
+
+                return Ok("File deleted.");
+            }
+
+            // Otherwise
+            return BadRequest("Could not delete the file.");
         }
     }
 }
