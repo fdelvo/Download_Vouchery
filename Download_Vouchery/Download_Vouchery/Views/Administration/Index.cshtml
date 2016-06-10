@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Manage Files";
 }
 
@@ -15,22 +14,26 @@
         <h2>Upload an image for your vouchers</h2>
         <p>For an optimal result your image should be 561px high and 793px wide.</p>
         <form role="form" ng-submit="UploadVoucherImage()">
-            <input type="file" name="file1" file-model="myFile" />
-            <input class="button" type="submit" value="Upload" />
+            <input type="file" name="file1" file-model="myFile"/>
+            <input class="button" type="submit" value="Upload"/>
         </form>
     </div>
     <div class="card-wrapper">
         <div class="card-inline" ng-init="GetFiles()">
             <div ng-repeat="f in files track by f.FileId" class="file-overview">
                 <ul>
-                    <li><a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a></li>
+                    <li>
+                        <a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a>
+                    </li>
                     <li>Size in Kb: {{f.FileSizeInKb}}</li>
                     <li>Owner: {{f.FileOwner.UserName}}</li>
-                    <li><a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a></li>
+                    <li>
+                        <a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a>
+                    </li>
                     <li ng-show="newVoucherForm">
                         <form role="form" ng-submit="CreateVoucher(f.FileId, $index)">
-                            <input type="number" max="10000" ng-model="voucherAmount[$index]" />
-                            <input class="button" type="submit" value="Create Voucher" />
+                            <input type="number" max="10000" ng-model="voucherAmount[$index]"/>
+                            <input class="button" type="submit" value="Create Voucher"/>
                             <p>Maximum amount per file: 10000</p>
                         </form>
                     </li>
@@ -45,7 +48,9 @@
                 <li>Redeemed: {{vouchersInfo.VoucherAmountRedeemed}}</li>
                 <li>Not redeemed: {{vouchersInfo.VoucherAmountNotRedeemed}}</li>
                 <li>Average redemption frequency per voucher: {{vouchersInfo.VoucherRedemptionFrequency}}</li>
-                <li><a href="../Administration/PrintVouchers/{{vouchers.Vouchers[0].VoucherFileId.FileId}}">Print vouchers</a></li>
+                <li>
+                    <a href="../Administration/PrintVouchers/{{vouchers.Vouchers[0].VoucherFileId.FileId}}">Print vouchers</a>
+                </li>
             </ul>
             <div class="mobile-vouchers-overview">
                 <div class="mobile-vouchers">
@@ -58,50 +63,50 @@
                     </div>
                 </div>
                 <div class="mobile-vouchers-pagination">
-                                <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
-                                <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
+                    <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
+                    <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
                 </div>
             </div>
             <table class="voucher-table">
                 <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Creation Date</th>
-                        <th>Redeemed</th>
-                        <th>Redemption Date</th>
-                        <th>Redemption frequency</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Code</th>
+                    <th>Creation Date</th>
+                    <th>Redeemed</th>
+                    <th>Redemption Date</th>
+                    <th>Redemption frequency</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
-                        <td>{{v.VoucherCode}}</td>
-                        <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
-                        <td>{{v.VoucherRedeemed}}</td>
-                        <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
-                        <td>{{v.VoucherRedemptionCounter}}</td>
-                        <td><a href="" ng-click="ResetVoucher(v.VoucherId)">Reset</a> <a href="" ng-click="DeleteVouchers(v.VoucherId)">Delete</a></td>
-                    </tr>
+                <tr ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
+                    <td>{{v.VoucherCode}}</td>
+                    <td>{{v.VoucherCreationDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                    <td>{{v.VoucherRedeemed}}</td>
+                    <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
+                    <td>{{v.VoucherRedemptionCounter}}</td>
+                    <td>
+                        <a href="" ng-click="ResetVoucher(v.VoucherId)">Reset</a> <a href="" ng-click="DeleteVouchers(v.VoucherId)">Delete</a>
+                    </td>
+                </tr>
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <td colspan="5">
-                            <div class="pagination">
-                                <ul>
-                                    <li ng-class="{disabled: currentPage == 0}">
-                                        <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
-                                    </li>
-                                    <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-                                        <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="pagination">
+                            <ul>
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
+                                </li>
+                                <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                    <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
-
-

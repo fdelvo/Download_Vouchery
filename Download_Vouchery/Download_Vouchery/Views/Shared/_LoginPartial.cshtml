@@ -1,17 +1,15 @@
-﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+﻿@if (Request.IsAuthenticated)
 {
-
-        <a class="nav-item">
-            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-            {
+    <a class="nav-item">
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm"}))
+        {
             @Html.AntiForgeryToken()
             <span onclick="document.getElementById('logoutForm').submit()">Log off</span>
-            }
-        </a>
+        }
+    </a>
 }
 else
 {
-        <a href="/Account/Register" class="nav-item">Register</a>
-        <a href="/Account/Login" class="nav-item">Log in</a>
+    <a href="/Account/Register" class="nav-item">Register</a>
+    <a href="/Account/Login" class="nav-item">Log in</a>
 }
