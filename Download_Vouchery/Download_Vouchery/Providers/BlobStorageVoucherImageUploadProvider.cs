@@ -1,19 +1,17 @@
-﻿using Download_Vouchery.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
+using Download_Vouchery.Helpers;
+using Download_Vouchery.Models;
 
-namespace Download_Vouchery.Controllers
+namespace Download_Vouchery.Providers
 {
-    public class BlobStorageUploadProvider : MultipartFileStreamProvider
+    public class BlobStorageVoucherImageUploadProvider : MultipartFileStreamProvider
     {
         public List<BlobUploadModel> Uploads { get; set; }
 
-        public BlobStorageUploadProvider() : base(Path.GetTempPath())
+        public BlobStorageVoucherImageUploadProvider() : base(Path.GetTempPath())
         {
             Uploads = new List<BlobUploadModel>();
         }
@@ -30,7 +28,8 @@ namespace Download_Vouchery.Controllers
                 var fileName = Path.GetFileName(fileData.Headers.ContentDisposition.FileName.Trim('"'));
 
                 // Retrieve reference to a blob
-                var blobContainer = new BlobHelper().GetBlobContainer();
+                var blobContainer = new BlobHelper().GetBlobSubContainer();
+
                 var blob = blobContainer.GetBlockBlobReference(fileName);
 
                 // Set the blob content type

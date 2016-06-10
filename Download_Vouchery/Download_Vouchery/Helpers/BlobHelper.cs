@@ -1,30 +1,26 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
+﻿using System.Configuration;
+using System.Web.Http;
+using Download_Vouchery.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Download_Vouchery.Models;
-using System.Web.Http;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Download_Vouchery.Controllers
+namespace Download_Vouchery.Helpers
 {
     public class BlobHelper : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserManager<ApplicationUser> UserManager()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             return manager;
         }
 
         public CloudBlobContainer GetBlobContainer(string fileOwnerId = "default")
         {
-            // Pull these from config
+            // Get ConnectionString from Config
             var blobStorageConnectionString = ConfigurationManager.AppSettings["BlobStorageConnectionString"];
 
             var blobStorageContainerName = fileOwnerId;
@@ -42,32 +38,35 @@ namespace Download_Vouchery.Controllers
 
         public CloudBlobContainer GetBlobSubContainer(string fileOwnerId = "default")
         {
-            // Pull these from config
+            // Get ConnectionString from Config
             var blobStorageConnectionString = ConfigurationManager.AppSettings["BlobStorageConnectionString"];
 
-            var blobStorageContainerName = fileOwnerId;
+            var userProfilePictureBlob = fileOwnerId;
 
             if (fileOwnerId == "default")
             {
-                blobStorageContainerName = UserManager().FindById(User.Identity.GetUserId()).Id.ToString();
+                userProfilePictureBlob = UserManager().FindById(User.Identity.GetUserId()).Id.ToString();
             }
 
             // Create blob client and return reference to the container
             var blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
             var blobClient = blobStorageAccount.CreateCloudBlobClient();
 
+            // Get profile pictures, create if it doesn't exist, set access to public
             blobClient.GetContainerReference("profilepictures");
             var container = blobClient.GetContainerReference("profilepictures");
             container.CreateIfNotExists();
             container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
 
-            var subContainer = blobClient.GetContainerReference("profilepictures/" + blobStorageContainerName);
+            var subContainer = blobClient.GetContainerReference("profilepictures/" + userProfilePictureBlob);
 
+            // Get the profile picture of the user in his own blob
             var folders = blobClient
                 .GetContainerReference("profilepictures")
-                .GetDirectoryReference(blobStorageContainerName)
+                .GetDirectoryReference(userProfilePictureBlob)
                 .ListBlobs(true);
 
+            // Delete the existing profile picture
             foreach (IListBlobItem blob in folders)
             {
                 if (blob.GetType() == typeof(CloudBlob) || blob.GetType().BaseType == typeof(CloudBlob))

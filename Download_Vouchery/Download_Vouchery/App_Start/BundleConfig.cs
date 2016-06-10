@@ -16,7 +16,7 @@ namespace Download_Vouchery
                         "~/Scripts/Angular/Directives/InterceptorDirective.js",
                         "~/Scripts/Angular/Factories/VoucherFactory.js",
                         "~/Scripts/Angular/Controllers/VoucherController.js",
-                        "~/Scripts/Angular/Controllers/FileController.js"
+                        "~/Scripts/Angular/Controllers/AdminController.js"
                         ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

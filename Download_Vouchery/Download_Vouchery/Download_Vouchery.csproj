@@ -260,12 +260,12 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
-    <Compile Include="Controllers\BlobHelper.cs" />
+    <Compile Include="Helpers\BlobHelper.cs" />
     <Compile Include="Controllers\BlobsController.cs" />
-    <Compile Include="Controllers\BlobStorageVoucherImageUploadProvider.cs" />
-    <Compile Include="Controllers\BlobStorageUploadProvider.cs" />
+    <Compile Include="Providers\BlobStorageVoucherImageUploadProvider.cs" />
+    <Compile Include="Providers\BlobStorageUploadProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IBlobService.cs" />
+    <Compile Include="Services\IBlobService.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\VouchersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -330,7 +330,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\Angular\Controllers\FileController.js" />
+    <Content Include="Scripts\Angular\Controllers\AdminController.js" />
     <Content Include="Scripts\Angular\Controllers\VoucherController.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.min.js" />

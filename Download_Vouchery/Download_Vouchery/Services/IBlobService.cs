@@ -1,17 +1,18 @@
-﻿using Download_Vouchery.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Download_Vouchery.Helpers;
+using Download_Vouchery.Models;
+using Download_Vouchery.Providers;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Download_Vouchery.Controllers
+namespace Download_Vouchery.Services
 {
     public interface IBlobService
     {
@@ -22,20 +23,23 @@ namespace Download_Vouchery.Controllers
 
     public class BlobService : ApiController, IBlobService
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserManager<ApplicationUser> UserManager()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             return manager;
         }
 
         public async Task<List<BlobUploadModel>> UploadBlobs(HttpContent httpContent)
         {
+            // Reference to the UploadProvider
             var blobUploadProvider = new BlobStorageUploadProvider();
 
+            // Get currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
+            // Perform upload task
             var list = await httpContent.ReadAsMultipartAsync(blobUploadProvider)
                 .ContinueWith(task =>
                 {
@@ -48,14 +52,15 @@ namespace Download_Vouchery.Controllers
                     return provider.Uploads.ToList();
                 });
 
+            // Create a BlobUploadModel for every uploaded file
             foreach (var item in list)
             {
                 item.FileId = Guid.NewGuid();
                 item.FileOwner = currentUser;
-                db.BlobUploadModels.Add(item);
+                _db.BlobUploadModels.Add(item);
                 try
                 {
-                    await db.SaveChangesAsync();
+                    await _db.SaveChangesAsync();
                 }
                 catch (DbUpdateException)
                 {
@@ -73,6 +78,7 @@ namespace Download_Vouchery.Controllers
             return list;
         }
 
+        // Basicall the same as method UploadBlob() but calls another provider
         public async Task<List<BlobUploadModel>> UploadVoucherImage(HttpContent httpContent)
         {
             var blobUploadProvider = new BlobStorageVoucherImageUploadProvider();
@@ -93,24 +99,24 @@ namespace Download_Vouchery.Controllers
 
             foreach (var item in list)
             {
-                if (db.BlobUploadModels.Any(x => x.FileName == item.FileName))
+                if (_db.BlobUploadModels.Any(x => x.FileName == item.FileName))
                 {
                     continue;
                 }
 
-                if (db.BlobUploadModels.Any(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures")))
+                if (_db.BlobUploadModels.Any(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures")))
                 {
-                    var blob = db.BlobUploadModels.Where(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures")).FirstOrDefault();
-                    db.BlobUploadModels.Remove(blob);
-                    await db.SaveChangesAsync();
+                    var blob = _db.BlobUploadModels.FirstOrDefault(x => x.FileOwner.Id == currentUser.Id && x.FileUrl.Contains("profilepictures"));
+                    _db.BlobUploadModels.Remove(blob);
+                    await _db.SaveChangesAsync();
                 }
 
                 item.FileId = Guid.NewGuid();
                 item.FileOwner = currentUser;
-                db.BlobUploadModels.Add(item);
+                _db.BlobUploadModels.Add(item);
                 try
                 {
-                    await db.SaveChangesAsync();
+                    await _db.SaveChangesAsync();
                 }
                 catch (DbUpdateException)
                 {
@@ -130,12 +136,12 @@ namespace Download_Vouchery.Controllers
 
         private bool BlobUploadModelExists(Guid id)
         {
-            return db.BlobUploadModels.Count(e => e.FileId == id) > 0;
+            return _db.BlobUploadModels.Count(e => e.FileId == id) > 0;
         }
 
         public string GetBlobName(Guid blobId)
         {
-            var name = db.BlobUploadModels.Find(blobId);
+            var name = _db.BlobUploadModels.Find(blobId);
 
             return name.FileName;
         }
@@ -146,7 +152,7 @@ namespace Download_Vouchery.Controllers
             // from your database, based on the blobId. The record should contain the
             // blobName, which you should return as the result of this helper method.
             var blobName = GetBlobName(blobId);
-            var blobTemp = db.BlobUploadModels.Find(blobId);
+            var blobTemp = _db.BlobUploadModels.Find(blobId);
 
             if (!String.IsNullOrEmpty(blobName))
             {

@@ -15,12 +15,14 @@ namespace Download_Vouchery
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            // Blobs Controller
+
             config.Routes.MapHttpRoute(
-            "PostBlobUpload",
-            "api/blobs/upload",
-            new { controller = "Blobs", action = "PostBlobUpload" },
-            new { httpMethod = new HttpMethodConstraint("POST") }
-        );
+                "PostBlobUpload",
+                "api/blobs/upload",
+                new { controller = "Blobs", action = "PostBlobUpload" },
+                new { httpMethod = new HttpMethodConstraint("POST") }
+            );
 
             config.Routes.MapHttpRoute(
                 "PostVoucherImage",
@@ -31,7 +33,7 @@ namespace Download_Vouchery
 
             config.Routes.MapHttpRoute(
                 "GetBlobDownload",
-                "api/blobs/{voucherCode}/download",
+                "api/blobs/{voucherCode}/download/{check}",
                 new { controller = "Blobs", action = "GetBlobDownload" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
             );
@@ -49,6 +51,8 @@ namespace Download_Vouchery
                 new { controller = "Blobs", action = "GetBlobs" },
                 new { httpMethod = new HttpMethodConstraint("GET") }
             );
+
+            // Vouchers Controller
 
             config.Routes.MapHttpRoute(
                 "GetVouchersPaged",

@@ -26,8 +26,8 @@ sup {
     font-size: 1rem;
 }
 
+/* Main Layout */
 
-/* Set padding to keep content from hitting the edges */
 .index {
     width: 60% !important;
     margin-right: auto !important;
@@ -65,48 +65,6 @@ footer a {
     display: inline;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
-}
-
-.card-inline {
-    display: inline-block;
-    width: 50%;
-    max-width: 50%;
-    vertical-align: top;
-    white-space: normal;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    box-sizing: border-box;
-}
-
-.card-inline:last-child {
-    padding-right: 4rem;
-}
-
-.card-inline:first-child {
-    padding-left: 4rem;
-}
-
-.card-wrapper {
-    background: white;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
-    white-space: nowrap;
-    margin: 0.5rem;
-}
-
-.card {
-    margin: 0.5rem;
-    background: white;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
-    padding: 4rem;
-}
-
 .mobile {
     display: none;
 }
@@ -128,29 +86,6 @@ footer a {
 .desktop .nav-item:hover {
     background-color: #FFE270;
 }
-
-.voucher-table {
-    text-align: left;
-}
-
-.voucher-table tr td, .voucher-table tr th {
-    padding: 0.5rem;
-}
-
-.pagination {
-    float: right;
-}
-
-.pagination ul {
-    margin: 0;
-    padding: 0;
-}
-
-.pagination ul li {
-    display: inline;
-}
-
-
 
 .active a {
     color: #671AA6 !important;
@@ -182,25 +117,6 @@ footer a {
     display: none;
 }
 
-.redeem-code {
-    text-align: center;
-}
-
-.redeem-code-form {
-    width: 50%;
-    height: 9rem;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.redeem-code-form input[type="text"] {
-    height: 6rem;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    margin-left: 0;
-}
-
 .status {
     color: red;
     position: fixed;
@@ -220,8 +136,8 @@ footer a {
     vertical-align: middle;
 }
 
-.voucher {
-    display: none;
+.text-danger {
+    color: red;
 }
 
 .button {
@@ -256,6 +172,71 @@ input[type="text"], input[type="number"], input[type="password"] {
     outline-color: #671AA6 !important;
 }
 
+
+/* Card CSS */
+
+.card {
+    margin: 0.5rem;
+    background: white;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+    padding: 4rem;
+}
+
+.card-wrapper {
+    background: white;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+    white-space: nowrap;
+    margin: 0.5rem;
+}
+
+.card-inline {
+    display: inline-block;
+    width: 50%;
+    max-width: 50%;
+    vertical-align: top;
+    white-space: normal;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    box-sizing: border-box;
+}
+
+.card-inline:last-child {
+    padding-right: 4rem;
+}
+
+.card-inline:first-child {
+    padding-left: 4rem;
+}
+
+/* Administration CSS */
+
+.voucher {
+    display: none;
+}
+
+.voucher-table {
+    text-align: left;
+}
+
+.voucher-table tr td, .voucher-table tr th {
+    padding: 0.5rem;
+}
+
+.pagination {
+    float: right;
+}
+
+.pagination ul {
+    margin: 0;
+    padding: 0;
+}
+
+.pagination ul li {
+    display: inline;
+}
+
 .file-overview {
     border-bottom: 0.1rem solid rgba(0,0,0,0.37);
     margin-bottom: 2rem;
@@ -274,6 +255,29 @@ input[type="text"], input[type="number"], input[type="password"] {
 .mobile-vouchers-overview {
     display: none;
 }
+
+
+/* Index CSS */
+
+.redeem-code {
+    text-align: center;
+}
+
+.redeem-code-form {
+    width: 50%;
+    height: 9rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.redeem-code-form input[type="text"] {
+    height: 6rem;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    margin-left: 0;
+}
+
 
 @media(max-width: 1170px) {
     body {

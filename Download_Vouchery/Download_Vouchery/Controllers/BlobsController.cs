@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Download_Vouchery.Services;
 
 namespace Download_Vouchery.Controllers
 {
@@ -21,23 +22,27 @@ namespace Download_Vouchery.Controllers
         // Interface in place so you can resolve with IoC container of your choice
         private readonly IBlobService _service = new BlobService();
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserManager<ApplicationUser> UserManager()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             return manager;
         }
 
 
         public async Task<IHttpActionResult> GetBlobs()
         {
+            // Get the currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
-            var uploadModels = await db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id && !o.FileUrl.Contains("profilepictures")).ToListAsync();
+            // Get user's blobs except his profile picture
+            var uploadModels = await _db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id && !o.FileUrl.Contains("profilepictures")).ToListAsync();
 
+            // Create list for displaying data
             var uploadModelStrippedList = new List<BlobUploadModelViewModel> ();
 
+            // Fill the list with data
             foreach (BlobUploadModel i in uploadModels)
             {
                 var uploadModelStripped = new BlobUploadModelViewModel();
@@ -115,9 +120,11 @@ namespace Download_Vouchery.Controllers
         [AcceptVerbs("GET")]
         public async Task<IHttpActionResult> VoucherImage()
         {
+            // Get currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
-            var voucherImage = await db.BlobUploadModels.FirstOrDefaultAsync(x => 
+            // Get his profile picture
+            var voucherImage = await _db.BlobUploadModels.FirstOrDefaultAsync(x => 
                 x.FileOwner.Id == currentUser.Id
                 && x.FileUrl.Contains("ProfilePicture"));
 
@@ -126,35 +133,34 @@ namespace Download_Vouchery.Controllers
 
         private bool VoucherExists(Guid id)
         {
-            return db.Vouchers.Count(e => e.VoucherId == id) > 0;
+            return _db.Vouchers.Count(e => e.VoucherId == id) > 0;
         }
 
-        /// <summary>
-        /// Downloads a blob file.
-        /// </summary>
-        /// <param name="blobId">The ID of the blob.</param>
-        /// <returns></returns>
-        public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode)
+        public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode, bool check)
         {
-            var voucher = db.Vouchers.Where(i => i.VoucherCode == voucherCode).FirstOrDefault();
+            // Get the voucher with the entered code
+            var voucher = _db.Vouchers.FirstOrDefault(i => i.VoucherCode == voucherCode);
 
+            // Cancel if voucher doesn't exist
             if (voucher == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
 
+            // Get the blob the voucher refers to
             var blob = voucher.VoucherFileId;
 
+            // Check if the blob and the reference to the blob matches
             if (blob.FileId != voucher.VoucherFileId.FileId)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
 
-            // IMPORTANT: This must return HttpResponseMessage instead of IHttpActionResult
-
             try
             {
+                // Call the IBlobService
                 var result = await _service.DownloadBlob(blob.FileId);
+
                 if (result == null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -179,10 +185,13 @@ namespace Download_Vouchery.Controllers
                 };
 
                 voucher.VoucherRedeemed = true;
-                voucher.VoucherRedemptionCounter++;
+                if (!check)
+                {
+                    voucher.VoucherRedemptionCounter++;
+                }
                 voucher.VoucherRedemptionDate = DateTime.Now;
 
-                await db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
 
                 return message;
             }

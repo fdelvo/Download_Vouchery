@@ -19,25 +19,30 @@ namespace Download_Vouchery.Controllers
 {
     public class VouchersController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserManager<ApplicationUser> UserManager()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             return manager;
         }
 
+        // Gets the vouchers of the currently logged in user
         public async Task<IHttpActionResult> GetVouchers(Guid id, int pageIndex = 0, int pageSize = 10)
         {
+            // Get currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
-            var totalCount = db.Vouchers
+            // Count how many vouchers the user has
+            var totalCount = _db.Vouchers
                 .Where(ui => ui.VoucherFileId.FileOwner.Id == currentUser.Id)
                 .Count(fi => fi.VoucherFileId.FileId == id);
 
+            // Calculate how many pages of vouchers could be retrieved
             var totalPages = Math.Ceiling((double)totalCount / pageSize);
 
-            var vouchers = await db.Vouchers
+            // Get a page of the user's vouchers
+            var vouchers = await _db.Vouchers
                 .Include(fo => fo.VoucherFileId.FileOwner)
                 .Include(fi => fi.VoucherFileId)
                 .Where(ui => ui.VoucherFileId.FileOwner.Id == currentUser.Id)
@@ -47,6 +52,7 @@ namespace Download_Vouchery.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            // Return the voucher page and add pagination info for the angularjs pagination
             var result = new
             {
                 TotalCount = totalCount,
@@ -57,28 +63,32 @@ namespace Download_Vouchery.Controllers
             return Ok(result);
         }
 
+        // Get statistics for the user's vouchers
         [ResponseType(typeof(VoucherInfoViewModel))]
         public async Task<IHttpActionResult> GetVouchersInfo(Guid id)
         {
+            // Get currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
+
+            // Create and fill the viewmodel for the voucher statistics
             VoucherInfoViewModel voucherInfo = new VoucherInfoViewModel
             {
-                VoucherAmount = await db.Vouchers
+                VoucherAmount = await _db.Vouchers
                     .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
                                      i.VoucherFileId.FileId == id),
-                VoucherAmountRedeemed = await db.Vouchers
+                VoucherAmountRedeemed = await _db.Vouchers
                     .CountAsync(i => i.VoucherFileId.FileOwner.Id == currentUser.Id &&
                                      i.VoucherFileId.FileId == id &&
                                      i.VoucherRedeemed == true)
             };
 
-
-
+            // Calculate this property to save one database call
             voucherInfo.VoucherAmountNotRedeemed = voucherInfo.VoucherAmount - voucherInfo.VoucherAmountRedeemed;
 
+            // Average of the voucher redemption frequency can just be evaluated when there are already redeemed vouchers, otherwise return 0
             if (voucherInfo.VoucherAmountRedeemed > 0)
             {
-                voucherInfo.VoucherRedemptionFrequency = await db.Vouchers
+                voucherInfo.VoucherRedemptionFrequency = await _db.Vouchers
                 .Where(fi => fi.VoucherFileId.FileOwner.Id == currentUser.Id)
                 .Where(ui => ui.VoucherFileId.FileId == id)
                 .Where(vr => vr.VoucherRedeemed == true)
@@ -95,7 +105,7 @@ namespace Download_Vouchery.Controllers
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> GetVoucherDetails(Guid id)
         {
-            Voucher voucher = await db.Vouchers.FindAsync(id);
+            Voucher voucher = await _db.Vouchers.FindAsync(id);
             if (voucher == null)
             {
                 return NotFound();
@@ -117,11 +127,11 @@ namespace Download_Vouchery.Controllers
                 return BadRequest();
             }
 
-            db.Entry(voucher).State = EntityState.Modified;
+            _db.Entry(voucher).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -139,19 +149,24 @@ namespace Download_Vouchery.Controllers
         }
 
         
-
+        // Help method for bulk insert
         private async Task<string> DoBulkCopy(bool keepNulls, DataTable reader, string destinationTable)
         {
+            // Get database connection
             string dataBaseConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlBulkCopyOptions options = new SqlBulkCopyOptions();
             options = SqlBulkCopyOptions.KeepIdentity;
+
             if (keepNulls)
             {
                 options = options |= SqlBulkCopyOptions.KeepNulls;
             }
+
             using (SqlBulkCopy bc = new SqlBulkCopy(dataBaseConnectionString, options))
             {
+                // Choose the destination table
                 bc.DestinationTableName = destinationTable;
+                // Timeout has to be high to give the bulk copying time
                 bc.BulkCopyTimeout = 100000;
                 foreach (DataColumn col in reader.Columns)
                 {
@@ -163,6 +178,7 @@ namespace Download_Vouchery.Controllers
             return "Succeded";
         }
 
+        // Help method for bulk insert
         public DataTable ToDataTable<T>(LinkedList<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
@@ -191,11 +207,13 @@ namespace Download_Vouchery.Controllers
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> PostVoucher(int voucherAmount, string id)
         {
+            // Variable to validate the request
             var proceed = !(!ModelState.IsValid || voucherAmount > 10000);
 
-            if (db.Vouchers.Any(fi => fi.VoucherFileId.FileId == new Guid(id)))
+            // Check that user doesn't generate more than 10000 vouchers for a file
+            if (_db.Vouchers.Any(fi => fi.VoucherFileId.FileId == new Guid(id)))
             {
-                var check = await db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
+                var check = await _db.Vouchers.Where(fi => fi.VoucherFileId.FileId == new Guid(id)).CountAsync();
                 if (check >= 10000 || check + voucherAmount > 10000)
                 {
                     proceed = false;
@@ -207,7 +225,10 @@ namespace Download_Vouchery.Controllers
                 return BadRequest("Validation failed or you tried to create more than 10000 vouchers.");
             }
 
-            var voucherFile = db.BlobUploadModels.Find(new Guid(id));
+            // Get the file the voucher refers to
+            var voucherFile = _db.BlobUploadModels.Find(new Guid(id));
+
+            // Create a list of vouchers for bulk copy
             LinkedList<VoucherBulkInsertViewModel> temp = new LinkedList<VoucherBulkInsertViewModel>();
 
             for (int i = 0; i < voucherAmount; i++) {
@@ -223,10 +244,12 @@ namespace Download_Vouchery.Controllers
                 temp.AddFirst(voucher);
             }
 
+            // Convert the list to a data table for bulk copying
             var reader = ToDataTable<VoucherBulkInsertViewModel>(temp);
 
             try
             {
+                // Do the actual bulk copy
                 await DoBulkCopy(false, reader, "Vouchers");
             }
             catch (DbUpdateException)
@@ -241,14 +264,14 @@ namespace Download_Vouchery.Controllers
         [ResponseType(typeof(Voucher))]
         public async Task<IHttpActionResult> DeleteVoucher(Guid id)
         {
-            Voucher voucher = await db.Vouchers.FindAsync(id);
+            Voucher voucher = await _db.Vouchers.FindAsync(id);
             if (voucher == null)
             {
                 return NotFound();
             }
 
-            db.Vouchers.Remove(voucher);
-            await db.SaveChangesAsync();
+            _db.Vouchers.Remove(voucher);
+            await _db.SaveChangesAsync();
 
             return Ok(voucher);
         }
@@ -257,14 +280,14 @@ namespace Download_Vouchery.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool VoucherExists(Guid id)
         {
-            return db.Vouchers.Count(e => e.VoucherId == id) > 0;
+            return _db.Vouchers.Count(e => e.VoucherId == id) > 0;
         }
     }
 }
