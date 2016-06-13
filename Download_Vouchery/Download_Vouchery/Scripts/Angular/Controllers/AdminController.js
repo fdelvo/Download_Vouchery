@@ -13,15 +13,20 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
     $scope.fileName = "";
     $scope.fileId = "";
     $scope.vouchersInfo = [];
-    var pageIndex;
+    var pageIndex = 0;
     var pageTotal;
     var totalCount;
 
     /* Voucher functions */
 
-    $scope.CreateVoucher = function(fileId, index) {
+    $scope.CreateVoucher = function(fileId, index, fileName) {
         $scope.newVoucher.$PostVouchers({ voucherAmount: $scope.voucherAmount[index], voucherFileId: fileId },
-            function() { $rootScope.status = "Vouchers created." },
+            function() {
+                $rootScope.status = "Vouchers created.";
+                $scope.GetVouchers(fileId);
+                $scope.GetVouchersInfo(fileId);
+                $scope.ShowVoucherOptions(fileName, fileId);
+            },
             function(error) {
                 $rootScope.status = error.data.Message;
             });
@@ -33,14 +38,16 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
             });
 
     };
-    $scope.GetVouchers = function(fileId, page, size) {
+    $scope.GetVouchers = function(fileId, page, size, reset) {
         if (typeof (page) === "undefined") page = 0;
         if (typeof (size) === "undefined") size = 10;
         $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size },
             function() {
                 pageTotal = $scope.vouchers.TotalPages;
                 totalCount = $scope.vouchers.TotalCount;
-                pageIndex = 0;
+                if (reset) {
+                    pageIndex = 0;
+                }
             });
         console.log($scope.vouchers);
     };
@@ -79,14 +86,18 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
                     voucher,
                     function() {
                         $rootScope.status = "Voucher reset.";
+                        $scope.GetVouchers(voucher.VoucherFileId.FileId, pageIndex);
+                        $scope.GetVouchersInfo(voucher.VoucherId);
                     });
             }
         );
     };
-    $scope.DeleteVouchers = function(voucherId) {
+    $scope.DeleteVouchers = function(voucherId, fileId) {
         VoucherFactory.DeleteVouchers({ id: voucherId },
             function() {
                 $rootScope.status = "Voucher deleted.";
+                $scope.GetVouchers(fileId.FileId, pageIndex, 10, true);
+                $scope.GetVouchersInfo(fileId.FileId);
             });
     };
 
@@ -176,7 +187,8 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
     };
 
     $scope.DeleteFile = function(id) {
-        FileFactory.DeleteBlob({ blobId: id }, function() {
+        FileFactory.DeleteBlob({ blobId: id }, function () {
+            window.location.reload();
             $rootScope.status = "File deleted.";
         });
     }

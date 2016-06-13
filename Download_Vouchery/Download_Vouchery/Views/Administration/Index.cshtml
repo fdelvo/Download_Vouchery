@@ -23,7 +23,7 @@
             <div ng-repeat="f in files track by f.FileId" class="file-overview">
                 <ul>
                     <li>
-                        <a href="" ng-click="GetVouchers(f.FileId, 0 ,10); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a>
+                        <a href="" ng-click="GetVouchers(f.FileId, 0 ,10, true); ShowVoucherOptions(f.FileName, f.FileId); GetVouchersInfo(f.FileId)">{{f.FileName}}</a>
                     </li>
                     <li>Size in Kb: {{f.FileSizeInKb}}</li>
                     <li>Owner: {{f.FileOwner.UserName}}</li>
@@ -32,7 +32,7 @@
                         <a href="" ng-click="DeleteFile(f.FileId)">Delete File</a>
                     </li>
                     <li ng-show="newVoucherForm">
-                        <form role="form" ng-submit="CreateVoucher(f.FileId, $index)">
+                        <form role="form" ng-submit="CreateVoucher(f.FileId, $index, f.FileName)">
                             <input type="number" max="10000" ng-model="voucherAmount[$index]"/>
                             <input class="button" type="submit" value="Create Voucher"/>
                             <p>Maximum amount per file: 10000</p>
@@ -87,7 +87,7 @@
                     <td>{{v.VoucherRedemptionDate | date:'MM/dd/yyyy @@ h:mma'}}</td>
                     <td>{{v.VoucherRedemptionCounter}}</td>
                     <td>
-                        <a href="" ng-click="ResetVoucher(v.VoucherId)">Reset</a> <a href="" ng-click="DeleteVouchers(v.VoucherId)">Delete</a>
+                        <a href="" ng-click="ResetVoucher(v.VoucherId)">Reset</a> <a href="" ng-click="DeleteVouchers(v.VoucherId, v.VoucherFileId)">Delete</a>
                     </td>
                 </tr>
                 </tbody>

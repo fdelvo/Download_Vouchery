@@ -201,7 +201,7 @@ namespace Download_Vouchery.Services
                 await blob.DeleteIfExistsAsync();
 
                 var file = _db.BlobUploadModels.Find(blobId);
-                var vouchersOfFile = await _db.Vouchers.Where(f => f.VoucherFileId.FileId == file.FileId).ToListAsync();
+                var vouchersOfFile = _db.Vouchers.Where(f => f.VoucherFileId.FileId == file.FileId);
                 _db.BlobUploadModels.Remove(file);
                 _db.Vouchers.RemoveRange(vouchersOfFile);
 

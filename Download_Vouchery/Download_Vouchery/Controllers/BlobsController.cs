@@ -65,7 +65,7 @@ namespace Download_Vouchery.Controllers
 
                 if (result != null)
                 {
-                    return Ok(result);
+                    return Ok("File deleted.");
                 }
 
                 // Otherwise
