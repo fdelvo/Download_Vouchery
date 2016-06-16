@@ -39,7 +39,7 @@ namespace Download_Vouchery.Controllers
                 .Count(fi => fi.VoucherFileId.FileId == id);
 
             // Calculate how many pages of vouchers could be retrieved
-            var totalPages = Math.Ceiling((double)totalCount / pageSize);
+            var totalPages = Math.Ceiling((double)totalCount / pageSize) - 1;
 
             // Get a page of the user's vouchers
             var vouchers = await _db.Vouchers

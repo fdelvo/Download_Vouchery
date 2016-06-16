@@ -18,6 +18,7 @@
     <a href="/Home/Index" class="nav-item">Home</a>
     <a href="/Administration/Index" class="nav-item">Manage Files</a>
     @Html.Partial("_LoginPartial")
+    <span class="status-desktop">Status: <span class="status-desktop-content" ng-show="status">{{status}} <a href="" ng-click="status = false">Close</a></span></span>
 </nav>
 <nav class="mobile">
     <div class="mobile-nav-collapsed" ng-click="showNav = !showNav">
@@ -42,8 +43,8 @@
 <div id="loaderDiv" ng-show="showLoader" loader>
     <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
 </div>
-<div class="status" ng-show="status">
-    <div class="status-content">
+<div class="status-mobile" ng-show="status">
+    <div class="status-mobile-content">
         {{status}} <a href="" ng-click="status = false">Close</a>
     </div>
 </div>

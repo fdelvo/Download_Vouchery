@@ -66,6 +66,9 @@
                 <div class="mobile-vouchers-pagination">
                     <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
                     <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
+                    <br/>
+                    <br/>
+                    <span>Page: <input type="number" ng-model="currentPage" ng-change="GoToPage(fileId)" /> of {{pageTotal}}</span>
                 </div>
             </div>
             <table class="voucher-table">
@@ -93,13 +96,16 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         <div class="pagination">
                             <ul>
                                 <li ng-class="{disabled: currentPage == 0}">
                                     <a href="" class="button" ng-click="prevPage(fileId)">« Prev</a>
                                 </li>
-                                <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                <li>
+                                    Page: {{currentPage}} of {{pageTotal}} | Go to page: <input type="number" ng-model="currentPage" ng-change="GoToPage(fileId)" />
+                                </li>
+                                <li ng-class="{disabled: (currentPage) == pageTotal}">
                                     <a href="" class="button" ng-click="nextPage(fileId)">Next »</a>
                                 </li>
                             </ul>

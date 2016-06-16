@@ -64,6 +64,10 @@ footer a {
 .desktop {
     background-color: #F7CA18;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
 .desktop .nav-item {
@@ -88,7 +92,6 @@ footer a {
     bottom: 0;
     height: 4rem;
     left: 0;
-    opacity: .8;
     position: fixed;
     right: 0;
     z-index: 1100;
@@ -105,23 +108,29 @@ footer a {
 
 .info { display: none; }
 
-.status {
-    background-color: white;
-    border-top: solid 1px #671AA6;
-    bottom: 0;
-    color: red;
-    display: table;
-    font-weight: bold;
-    height: 4rem;
-    left: 0;
-    position: fixed;
-    text-align: center;
-    width: 100%;
+.disabled {
+    text-decoration: line-through;
+    pointer-events: none;
 }
 
-.status-content {
-    display: table-cell;
-    vertical-align: middle;
+.status-desktop {
+    color: black;
+    font-weight: bold;
+    display: inline-block;
+    padding: 1rem;
+    float: right;
+}
+
+.status-desktop-content {
+    color: red;
+}
+
+.status-mobile {
+    display: none;
+}
+
+.status-mobile-content {
+    display: none;
 }
 
 .text-danger { color: red; }
@@ -257,6 +266,10 @@ input[type="text"], input[type="number"], input[type="password"] {
         height: auto;
     }
 
+    .mobile-vouchers-pagination span input {
+        width: 32px;
+    }
+
     .card {
         box-sizing: border-box;
         margin-left: 0;
@@ -321,6 +334,25 @@ input[type="text"], input[type="number"], input[type="password"] {
 
 
     .mobile .nav-item:hover { background-color: #FFE270; }
+
+    .status-mobile {
+        background-color: white;
+        border-top: solid 1px #671AA6;
+        bottom: 0;
+        color: red;
+        display: table;
+        font-weight: bold;
+        height: 4rem;
+        left: 0;
+        position: fixed;
+        text-align: center;
+        width: 100%;
+    }
+
+    .status-mobile-content {
+        display: table-cell;
+        vertical-align: middle;
+    }
 }
 
 @media (max-width: 500px) {
@@ -341,7 +373,7 @@ input[type="text"], input[type="number"], input[type="password"] {
 
     footer { display: none; }
 
-    .status, -status-contet { display: none; }
+    .status, .status-contet { display: none; }
 
     .voucher-image {
         border: 1px solid black;

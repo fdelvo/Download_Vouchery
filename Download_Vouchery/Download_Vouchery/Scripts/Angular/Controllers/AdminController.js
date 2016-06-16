@@ -13,9 +13,10 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
     $scope.fileName = "";
     $scope.fileId = "";
     $scope.vouchersInfo = [];
-    var pageIndex = 0;
-    var pageTotal;
-    var totalCount;
+    $scope.currentPage = 0;
+    $scope.pageTotal = 0;
+    $scope.totalCount = 0;
+    $scope.pageSize = 10;
 
     /* Voucher functions */
 
@@ -38,28 +39,18 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
             });
 
     };
-    $scope.GetVouchers = function(fileId, page, size, reset) {
-        if (typeof (page) === "undefined") page = 0;
-        if (typeof (size) === "undefined") size = 10;
-        $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size },
-            function() {
-                pageTotal = $scope.vouchers.TotalPages;
-                totalCount = $scope.vouchers.TotalCount;
-                if (reset) {
-                    pageIndex = 0;
-                }
-            });
-        console.log($scope.vouchers);
-    };
-    $scope.GetVoucherBatch = function(fileId, page, size) {
-        if (typeof (page) === "undefined") page = 0;
-        if (typeof (size) === "undefined") size = 10;
-        $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size },
-            function() {
-                pageTotal = $scope.vouchers.TotalPages;
-                totalCount = $scope.vouchers.TotalCount;
-                pageIndex = 0;
-                $rootScope.status = "Batch " + (page + 1) + " ready.";
+    $scope.GetVouchers = function (fileId, pageIndex) {
+        $scope.GetVouchersInfo(fileId);
+        if (typeof pageIndex !== 'undefined') {
+            $scope.currentPage = pageIndex;
+        } else {
+            $scope.currentPage = 0;
+        }
+        $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: $scope.currentPage, pageSize: $scope.pageSize },
+            function () {
+                $scope.vouchers = $scope.vouchersTemp;
+                $scope.pageTotal = $scope.vouchers.TotalPages;
+                $scope.totalCount = $scope.vouchers.TotalCount;
             });
     };
     $scope.GetVouchersInfo = function(fileId) {
@@ -86,8 +77,7 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
                     voucher,
                     function() {
                         $rootScope.status = "Voucher reset.";
-                        $scope.GetVouchers(voucher.VoucherFileId.FileId, pageIndex);
-                        $scope.GetVouchersInfo(voucher.VoucherId);
+                        $scope.GetVouchers(voucher.VoucherFileId.FileId, $scope.currentPage);
                     });
             }
         );
@@ -96,43 +86,48 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
         VoucherFactory.DeleteVouchers({ id: voucherId },
             function() {
                 $rootScope.status = "Voucher deleted.";
-                $scope.GetVouchers(fileId.FileId, pageIndex, 10, true);
-                $scope.GetVouchersInfo(fileId.FileId);
+                $scope.GetVouchers(fileId.FileId);
             });
     };
 
     /* Pagination */
 
     $scope.prevPage = function(fileId) {
-        if (pageIndex <= 0) {
-            pageIndex = 0;
+        if ($scope.currentPage <= 0) {
+            $scope.currentPage = 0;
         } else {
-            pageIndex--;
-            if (typeof (size) === "undefined") size = 10;
-            $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: pageIndex, pageSize: size },
+            $scope.currentPage--;
+            $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: $scope.currentPage, pageSize: $scope.pageSize },
                 function() {
                     $scope.vouchers = $scope.vouchersTemp;
                 });
         }
     };
-
+    $scope.GoToPage = function (fileId) {
+        if ($scope.currentPage > $scope.pageTotal) {
+            $scope.currentPage = $scope.pageTotal;
+        }
+        if ($scope.currentPage < 0) {
+            $scope.currentPage = 0;
+        }
+        if ($scope.currentPage <= $scope.pageTotal && $scope.currentPage >= 0) {
+            $scope.vouchersTemp = VoucherFactory
+                .GetVouchersPaged({ id: fileId, pageIndex: $scope.currentPage, pageSize: $scope.pageSize },
+                    function() {
+                        $scope.vouchers = $scope.vouchersTemp;
+                    });
+        }
+    };
     $scope.nextPage = function(fileId) {
-        pageIndex++;
-        if (typeof (size) === "undefined") size = 10;
-        if (pageIndex < pageTotal) {
-            $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: pageIndex, pageSize: size },
+        $scope.currentPage++;
+        if ($scope.currentPage <= $scope.pageTotal) {
+            $scope.vouchersTemp = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: $scope.currentPage, pageSize: $scope.pageSize },
                 function() {
                     $scope.vouchers = $scope.vouchersTemp;
                 });
         } else {
-            pageIndex--;
+            $scope.currentPage--;
         }
-    };
-
-    $scope.GetValueAtIndex = function(index) {
-        var str = window.location.href;
-        console.log(str.split("/")[index]);
-        return str.split("/")[index];
     };
 
     /* Print vouchers functions */
@@ -142,21 +137,37 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
         var size = 1000;
         $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size },
             function() {
-                pageTotal = $scope.vouchers.TotalPages;
-                totalCount = $scope.vouchers.TotalCount;
-                pageIndex = 0;
+                $scope.pageTotal = $scope.vouchers.TotalPages;
+                $scope.totalCount = $scope.vouchers.TotalCount;
+                $scope.currentPage = 0;
                 $scope.ShowBatchOptions();
                 $rootScope.status = "Batch 1 ready to print.";
             });
         console.log($scope.vouchers);
     };
+    $scope.GetVoucherBatch = function (fileId, page, size) {
+        if (typeof (page) === "undefined") page = 0;
+        if (typeof (size) === "undefined") size = 10;
+        $scope.vouchers = VoucherFactory.GetVouchersPaged({ id: fileId, pageIndex: page, pageSize: size },
+            function () {
+                $scope.pageTotal = $scope.vouchers.TotalPages;
+                $scope.totalCount = $scope.vouchers.TotalCount;
+                $scope.currentPage = 0;
+                $rootScope.status = "Batch " + (page + 1) + " ready.";
+            });
+    };
     $scope.ShowBatchOptions = function() {
-        var optionsAmount = Math.ceil(totalCount / 1000);
+        var optionsAmount = Math.ceil($scope.totalCount / 1000);
         $scope.showOptions = [];
         for (i = 0; i < optionsAmount; i++) {
             $scope.showOptions.push(i);
         }
         console.log($scope.showOptions);
+    };
+    $scope.GetValueAtIndex = function (index) {
+        var str = window.location.href;
+        console.log(str.split("/")[index]);
+        return str.split("/")[index];
     };
 
     /* File functions */
@@ -173,7 +184,6 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
         var uploadUrl = "/api/blobs/upload";
         UploadFactory.uploadFileToUrl(file, uploadUrl);
     };
-
     $scope.UploadVoucherImage = function() {
         var file = $scope.myFile;
 
@@ -185,7 +195,6 @@ function AdminController($scope, $rootScope, $filter, $route, $http, FileFactory
             $rootScope.status = "Only PNG files are allowed";
         }
     };
-
     $scope.DeleteFile = function(id) {
         FileFactory.DeleteBlob({ blobId: id }, function () {
             window.location.reload();
