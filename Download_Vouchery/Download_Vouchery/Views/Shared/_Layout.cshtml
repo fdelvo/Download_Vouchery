@@ -1,43 +1,52 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, width=device-width">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Download Vouchery</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/angular")
 
 </head>
 <body ng-app="DownloadVoucheryApp">
-    <nav class="desktop">
-                    <a href="/Home/Index" class="nav-item">Home</a>
-                    <a href="/Administration/Index" class="nav-item">Manage Files</a>
-                    <a href="/Home/About" class="nav-item">About</a>
-                    <a href="/Home/Contact" class="nav-item">Contact</a>
-                    @Html.Partial("_LoginPartial")
-    </nav>
-    <nav class="mobile">
-        <div class="mobile-nav-collapsed" ng-click="showNav = !showNav"><i class="fa fa-bars" aria-hidden="true"></i> Download Vouchery</div>
-        <div class="mobile-nav" ng-show="showNav">
-            <a href="/Home/Index" class="nav-item">Home</a>
-            <a href="/Administration/Index" class="nav-item">Manage Files</a>
-            <a href="/Home/About" class="nav-item">About</a>
-            <a href="/Home/Contact" class="nav-item">Contact</a>
-            @Html.Partial("_LoginPartial")
-        </div>
-    </nav>
-    <main>
-        @RenderBody()
-        <footer>
-        </footer>
-    </main>
-    <div id="loaderDiv" ng-show="showLoader" loader>
-        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
+<nav class="desktop">
+    <a href="/Home/Index" class="nav-item">Home</a>
+    <a href="/Administration/Index" class="nav-item">Manage Files</a>
+    @Html.Partial("_LoginPartial")
+    <span class="status-desktop">Status: <span class="status-desktop-content" ng-show="status">{{status}} <a href="" ng-click="status = false">Close</a></span></span>
+</nav>
+<nav class="mobile">
+    <div class="mobile-nav-collapsed" ng-click="showNav = !showNav">
+        <i class="fa fa-bars" aria-hidden="true"></i> Download Vouchery<sup>BETA</sup>
     </div>
+    <div class="mobile-nav" ng-show="showNav">
+        <a href="/Home/Index" class="nav-item">Home</a>
+        <a href="/Administration/Index" class="nav-item">Manage Files</a>
+        @Html.Partial("_LoginPartial")
+    </div>
+</nav>
+<main>
+    @RenderBody()
+</main>
+<footer>
+    <div class="footer-content">
+        <a href="/Home/Impressum">Impressum</a>
+        <a href="/Home/Contact">Contact</a>
+        <a href="/Home/About">About</a>
+    </div>
+</footer>
+<div id="loaderDiv" ng-show="showLoader" loader>
+    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom ajax-loader"></i>
+</div>
+<div class="status-mobile" ng-show="status">
+    <div class="status-mobile-content">
+        {{status}} <a href="" ng-click="status = false">Close</a>
+    </div>
+</div>
 </body>
 </html>

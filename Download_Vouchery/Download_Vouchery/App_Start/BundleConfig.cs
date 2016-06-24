@@ -8,17 +8,6 @@ namespace Download_Vouchery
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                        "~/Scripts/Angular/DownloadVoucheryApp.js",
-                        "~/Scripts/Angular/Factories/FileFactory.js",
-                        "~/Scripts/Angular/Factories/UploadFactory.js",
-                        "~/Scripts/Angular/Factories/InterceptorFactory.js",
-                        "~/Scripts/Angular/Directives/InterceptorDirective.js",
-                        "~/Scripts/Angular/Factories/VoucherFactory.js",
-                        "~/Scripts/Angular/Controllers/VoucherController.js",
-                        "~/Scripts/Angular/Controllers/FileController.js"
-                        ));
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/Site.css"
                         ));
@@ -28,7 +17,18 @@ namespace Download_Vouchery
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = true;
+        }
+
+        public static void RegisterScriptBundles(BundleCollection bundles)
+        {
+            const string ANGULAR_APP_ROOT = "~/Scripts/Angular/";
+
+            var scriptBundle = new ScriptBundle("~/bundles/angular")
+                .Include(ANGULAR_APP_ROOT + "DownloadVoucheryApp.js", ANGULAR_APP_ROOT + "Controllers/AdminController.js", ANGULAR_APP_ROOT + "Controllers/VoucherController.js", ANGULAR_APP_ROOT + "Directives/InterceptorDirective.js", ANGULAR_APP_ROOT + "Factories/FileFactory.js", ANGULAR_APP_ROOT + "Factories/InterceptorFactory.js", ANGULAR_APP_ROOT + "Factories/UploadFactory.js", ANGULAR_APP_ROOT + "Factories/VoucherFactory.js");
+
+
+            bundles.Add(scriptBundle);
         }
     }
 }

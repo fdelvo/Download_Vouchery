@@ -1,4 +1,5 @@
 ﻿using Download_Vouchery.Models;
+using Download_Vouchery.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Download_Vouchery.Services;
 
 namespace Download_Vouchery.Controllers
 {
@@ -20,18 +22,59 @@ namespace Download_Vouchery.Controllers
         // Interface in place so you can resolve with IoC container of your choice
         private readonly IBlobService _service = new BlobService();
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserManager<ApplicationUser> UserManager()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             return manager;
         }
 
-        public IQueryable<BlobUploadModel> GetBlobs()
+
+        public async Task<IHttpActionResult> GetBlobs()
         {
+            // Get the currently logged in user
             var currentUser = UserManager().FindById(User.Identity.GetUserId());
-            return db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id);
+
+            // Get user's blobs except his profile picture
+            var uploadModels = await _db.BlobUploadModels.Where(o => o.FileOwner.Id == currentUser.Id && !o.FileUrl.Contains("profilepictures")).ToListAsync();
+
+            // Create list for displaying data
+            var uploadModelStrippedList = new List<BlobUploadModelViewModel> ();
+
+            // Fill the list with data
+            foreach (BlobUploadModel i in uploadModels)
+            {
+                var uploadModelStripped = new BlobUploadModelViewModel();
+                uploadModelStripped.FileId = i.FileId;
+                uploadModelStripped.FileName = i.FileName;
+                uploadModelStripped.FileOwner = i.FileOwner;
+                uploadModelStripped.FileSizeInBytes = i.FileSizeInBytes;
+
+                uploadModelStrippedList.Add(uploadModelStripped);
+            }
+
+            return Ok(uploadModelStrippedList);
+        }
+
+        public async Task<IHttpActionResult> DeleteBlob(Guid blobId)
+        {
+            try
+            {
+                var result = await _service.DeleteBlob(blobId);
+
+                if (result != null)
+                {
+                    return Ok("File deleted.");
+                }
+
+                // Otherwise
+                return BadRequest("Deletion failed.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         /// <summary>
@@ -57,7 +100,7 @@ namespace Download_Vouchery.Controllers
                 }
 
                 // Otherwise
-                return BadRequest();
+                return BadRequest("Upload failed.");
             }
             catch (Exception ex)
             {
@@ -65,36 +108,79 @@ namespace Download_Vouchery.Controllers
             }
         }
 
-        private bool VoucherExists(Guid id)
+        [ResponseType(typeof(List<BlobUploadModel>))]
+        public async Task<IHttpActionResult> PostVoucherImage()
         {
-            return db.Vouchers.Count(e => e.VoucherId == id) > 0;
+            try
+            {
+                // This endpoint only supports multipart form data
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    return StatusCode(HttpStatusCode.UnsupportedMediaType);
+                }
+
+                // Call service to perform upload, then check result to return as content
+                var result = await _service.UploadVoucherImage(Request.Content);
+                if (result != null && result.Count > 0)
+                {
+                    return Ok(result);
+                }
+
+                // Otherwise
+                return BadRequest("Upload failed.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        /// <summary>
-        /// Downloads a blob file.
-        /// </summary>
-        /// <param name="blobId">The ID of the blob.</param>
-        /// <returns></returns>
-        public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode)
+        [ResponseType(typeof(BlobUploadModel))]
+        [HttpGet]
+        [AcceptVerbs("GET")]
+        public async Task<IHttpActionResult> VoucherImage()
         {
-            var voucher = db.Vouchers.Where(i => i.VoucherCode == voucherCode).FirstOrDefault();
-            var blob = voucher.VoucherFileId;
+            // Get currently logged in user
+            var currentUser = UserManager().FindById(User.Identity.GetUserId());
 
+            // Get his profile picture
+            var voucherImage = await _db.BlobUploadModels.FirstOrDefaultAsync(x => 
+                x.FileOwner.Id == currentUser.Id
+                && x.FileUrl.Contains("ProfilePicture"));
+
+            return Ok(voucherImage);
+        }
+
+        private bool VoucherExists(Guid id)
+        {
+            return _db.Vouchers.Count(e => e.VoucherId == id) > 0;
+        }
+
+        public async Task<HttpResponseMessage> GetBlobDownload(string voucherCode, bool check)
+        {
+            // Get the voucher with the entered code
+            var voucher = _db.Vouchers.FirstOrDefault(i => i.VoucherCode == voucherCode);
+
+            // Cancel if voucher doesn't exist
             if (voucher == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
 
+            // Get the blob the voucher refers to
+            var blob = voucher.VoucherFileId;
+
+            // Check if the blob and the reference to the blob matches
             if (blob.FileId != voucher.VoucherFileId.FileId)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
 
-            // IMPORTANT: This must return HttpResponseMessage instead of IHttpActionResult
-
             try
             {
+                // Call the IBlobService
                 var result = await _service.DownloadBlob(blob.FileId);
+
                 if (result == null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -119,10 +205,13 @@ namespace Download_Vouchery.Controllers
                 };
 
                 voucher.VoucherRedeemed = true;
-                voucher.VoucherRedemptionCounter++;
+                if (!check)
+                {
+                    voucher.VoucherRedemptionCounter++;
+                }
                 voucher.VoucherRedemptionDate = DateTime.Now;
 
-                await db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
 
                 return message;
             }

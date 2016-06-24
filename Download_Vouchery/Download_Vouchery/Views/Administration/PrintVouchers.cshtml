@@ -1,25 +1,35 @@
-﻿<div class="print-instructions card">
-    <h1>Print Vouchers</h1>
-    <p>Wait until the loading spinner disappears.</p>
-    <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
-    <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
-    <p>You can only print a maximum of 1000 vouchers at a time due to performance issues.</p>
+﻿@{
+    ViewBag.Title = "Print Vouchers";
+}
+<div ng-controller="AdminController" ng-init="GetVouchersForPrint(GetValueAtIndex(5),0); ShowBatchOptions(); DisplayVoucherImageUrl()">
+    <div class="print-instructions card">
+        <h1>Print Vouchers</h1>
+        <p>Wait until the loading spinner disappears.</p>
+        <p>Select the batch of vouchers to print:</p>
+        <ul>
+            <li ng-repeat="o in showOptions">
+                <a href="" ng-click="GetVoucherBatch(GetValueAtIndex(5),o,1000)">Batch {{o + 1}}</a>
+            </li>
+        </ul>
+        <p>To print your vouchers, select print in your browser or press "CTRL + P".</p>
+        <p>You can print directly or select "Save To Pdf" to get your Vouchers as a Pdf file.</p>
+        <p>You can only print a maximum of 1000 vouchers at a time due to performance issues.</p>
+        <p>For an optimal result choose the DIN A4 format.</p>
+    </div>
+    <div class="voucher" ng-repeat="v in vouchers.Vouchers track by v.VoucherId">
+        <img class="voucher-image" ng-src="{{voucherImage}}"/>
+        <div class="voucher-content">
+            <h1>Download Voucher</h1>
+            <i>for the file: {{v.VoucherFileId.FileName}}</i>
+            <br/>
+            <strong>To redeem your voucher follow the steps below.</strong>
+            <ol>
+                <li>Visit download-vouchery.azurewebsites.net/</li>
+                <li>Scroll down to the box with the "You got a voucher?" headline</li>
+                <li>Enter the following code and click "Download"</li>
+            </ol>
+            <code>{{v.VoucherCode}}</code>
+            <br/>
+        </div>
+    </div>
 </div>
-<div class="voucher-container" ng-controller="FileController" ng-init="GetVouchers(GetValueAtIndex(5), 0 ,1000)">
-        <div class="voucher" ng-repeat="v in vouchers[pageIndex] track by v.VoucherId">
-            <div class="voucher-content">
-                <h1>Download Voucher</h1>
-                <i>for the file: {{v.VoucherFileId.FileName}}</i>
-                <br />
-                <strong>To redeem your voucher follow the steps below.</strong>
-                <ol>
-                    <li>Visit www.download-vouchery.com</li>
-                    <li>Scroll down to the box with the "You got a voucher?" headline</li>
-                    <li>Enter the following code and click "Download"</li>
-                </ol>
-                <code>{{v.VoucherCode}}</code>
-            </div>
-        </div> 
-</div>
-
-

@@ -1,25 +1,29 @@
-﻿(function () { 
-    angular.module('DownloadVoucheryApp').factory('httpInterceptor', httpInterceptor).config(function ($httpProvider) {
-        $httpProvider.interceptors.push('httpInterceptor');
-    });
+﻿
+angular.module("DownloadVoucheryApp")
+    .factory("httpInterceptor", httpInterceptor)
+    .config([
+        "$httpProvider", function($httpProvider) {
+            $httpProvider.interceptors.push("httpInterceptor");
+        }
+    ]);
 
-httpInterceptor.$inject = ['$q', '$rootScope', '$log'];
+httpInterceptor.$inject = ["$q", "$rootScope", "$log"];
 
-function httpInterceptor ($q, $rootScope, $log) {
+function httpInterceptor($q, $rootScope, $log) {
 
     var numLoadings = 0;
 
     return {
-        request: function (config) {
+        request: function(config) {
 
             numLoadings++;
 
             // Show loader
             $rootScope.$broadcast("loader_show");
-            return config || $q.when(config)
+            return config || $q.when(config);
 
         },
-        response: function (response) {
+        response: function(response) {
 
             if ((--numLoadings) === 0) {
                 // Hide loader
@@ -29,7 +33,7 @@ function httpInterceptor ($q, $rootScope, $log) {
             return response || $q.when(response);
 
         },
-        responseError: function (response) {
+        responseError: function(response) {
 
             if (!(--numLoadings)) {
                 // Hide loader
@@ -40,4 +44,3 @@ function httpInterceptor ($q, $rootScope, $log) {
         }
     };
 }
-})();

@@ -1,9 +1,14 @@
-﻿(function () { 
-angular.module('DownloadVoucheryApp').factory('FileFactory', FileFactory);
+﻿
+angular.module("DownloadVoucheryApp").factory("FileFactory", FileFactory);
 
-FileFactory.$inject = ['$resource'];
+FileFactory.$inject = ["$resource"];
 
-function FileFactory ($resource) {
-    return $resource('/api/blobs/:id'); 
+function FileFactory($resource) {
+    return $resource("/api/blobs/",
+        null,
+        {
+            GetVoucherImageUrl: { method: "GET", url: "/api/blobs/voucherimage/displayurl" },
+            query: { method: "GET", url: "/api/blobs/getfiles", isArray: true },
+            DeleteBlob: { method: "DELETE", url: "/api/blobs/delete/:blobId" }
+        });
 }
-})();
