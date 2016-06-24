@@ -102,6 +102,13 @@ namespace Download_Vouchery
                 new { controller = "Vouchers", action = "DeleteVoucher" },
                 new { httpMethod = new HttpMethodConstraint("DELETE") }
             );
+
+            config.Routes.MapHttpRoute(
+                "GenerateOnlineVoucher",
+                "api/vouchers/generateonlinevoucher/{id}/{mailAddress}",
+                new { controller = "Vouchers", action = "GenerateOnlineVoucher" },
+                new { httpMethod = new HttpMethodConstraint("POST") }
+            );
         }
     }
 }

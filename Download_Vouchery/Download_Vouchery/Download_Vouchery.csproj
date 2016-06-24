@@ -260,8 +260,14 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
+    <Compile Include="Controllers\OnlineVoucherController.cs" />
     <Compile Include="Helpers\BlobHelper.cs" />
     <Compile Include="Controllers\BlobsController.cs" />
+    <Compile Include="Migrations\201606241352535_online-vouchers.cs" />
+    <Compile Include="Migrations\201606241352535_online-vouchers.Designer.cs">
+      <DependentUpon>201606241352535_online-vouchers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OnlineVoucher.cs" />
     <Compile Include="Providers\BlobStorageVoucherImageUploadProvider.cs" />
     <Compile Include="Providers\BlobStorageUploadProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -331,6 +337,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\Angular\Controllers\AdminController.js" />
+    <Content Include="Scripts\Angular\Controllers\OnlineVoucherController.js" />
     <Content Include="Scripts\Angular\Controllers\VoucherController.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.js" />
     <Content Include="Scripts\Angular\Core\angular-animate.min.js" />
@@ -1154,6 +1161,7 @@
     <Content Include="Views\Shared\Info.cshtml" />
     <Content Include="Views\Home\Impressum.cshtml" />
     <None Include="Properties\PublishProfiles\download-vouchery.pubxml" />
+    <Content Include="Views\OnlineVoucher\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1209,6 +1217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605271334398_remove_online_vouchers.resx">
       <DependentUpon>201605271334398_remove_online_vouchers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606241352535_online-vouchers.resx">
+      <DependentUpon>201606241352535_online-vouchers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

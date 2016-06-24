@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -14,6 +15,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.SqlClient;
 using System.Reflection;
+using SendGrid;
+using System.Net.Mail;
 
 namespace Download_Vouchery.Controllers
 {
@@ -258,6 +261,53 @@ namespace Download_Vouchery.Controllers
             }
 
             return StatusCode(HttpStatusCode.Created);
+        }
+
+        [ResponseType(typeof(OnlineVoucher))]
+        public async Task<IHttpActionResult> GenerateOnlineVoucher(Guid id, string mailAddress)
+        {
+            var voucherFile = _db.BlobUploadModels.Find(id);
+
+            var voucher = new OnlineVoucher {OnlineVoucherId = Guid.NewGuid()};
+            voucher.OnlineVoucherCode = voucher.OnlineVoucherId.ToString().Substring(0, 8);
+            voucher.OnlineVoucherCreationDate = DateTime.Now;
+            voucher.OnlineVoucherRedeemed = false;
+            voucher.OnlineVoucherRedemptionDate = null;
+            voucher.OnlineVoucherFileId = voucherFile;
+            voucher.OnlineVoucherRedemptionCounter = 0;
+            voucher.OnlineVoucherEmail = mailAddress;
+
+            _db.OnlineVouchers.Add(voucher);
+            await _db.SaveChangesAsync();
+
+            // Create the email object first, then add the properties.
+            var myMessage = new SendGridMessage {From = new MailAddress("code@downloadvouchery.com")};
+
+            // Add the message properties.
+
+            // Add multiple addresses to the To field.
+            var recipient = mailAddress;
+
+            myMessage.AddTo(recipient);
+
+            myMessage.Subject = "Your Download Code";
+
+            //Add the HTML and Text bodies
+            myMessage.Html = "<p>Your code: " + voucher.OnlineVoucherCode + "</p>";
+            myMessage.Text = "Your code: " + voucher.OnlineVoucherCode;
+
+            var credentials = new NetworkCredential(
+                       ConfigurationManager.AppSettings["mailAccount"],
+                       ConfigurationManager.AppSettings["mailPassword"]
+                       );
+
+            // Create a Web transport for sending email.
+            var transportWeb = new Web(credentials);
+
+            // Send the email.
+            await transportWeb.DeliverAsync(myMessage);
+
+            return Ok("Your code has been sent to your mail address.");
         }
 
         // DELETE: api/Vouchers/5

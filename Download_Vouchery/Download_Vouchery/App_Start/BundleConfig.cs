@@ -25,7 +25,7 @@ namespace Download_Vouchery
             const string ANGULAR_APP_ROOT = "~/Scripts/Angular/";
 
             var scriptBundle = new ScriptBundle("~/bundles/angular")
-                .Include(ANGULAR_APP_ROOT + "DownloadVoucheryApp.js", ANGULAR_APP_ROOT + "Controllers/AdminController.js", ANGULAR_APP_ROOT + "Controllers/VoucherController.js", ANGULAR_APP_ROOT + "Directives/InterceptorDirective.js", ANGULAR_APP_ROOT + "Factories/FileFactory.js", ANGULAR_APP_ROOT + "Factories/InterceptorFactory.js", ANGULAR_APP_ROOT + "Factories/UploadFactory.js", ANGULAR_APP_ROOT + "Factories/VoucherFactory.js");
+                .Include(ANGULAR_APP_ROOT + "DownloadVoucheryApp.js", ANGULAR_APP_ROOT + "Controllers/AdminController.js", ANGULAR_APP_ROOT + "Controllers/VoucherController.js", ANGULAR_APP_ROOT + "Controllers/OnlineVoucherController.js", ANGULAR_APP_ROOT + "Directives/InterceptorDirective.js", ANGULAR_APP_ROOT + "Factories/FileFactory.js", ANGULAR_APP_ROOT + "Factories/InterceptorFactory.js", ANGULAR_APP_ROOT + "Factories/UploadFactory.js", ANGULAR_APP_ROOT + "Factories/VoucherFactory.js");
 
 
             bundles.Add(scriptBundle);

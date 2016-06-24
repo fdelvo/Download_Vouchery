@@ -12,6 +12,7 @@ function VoucherFactory($resource) {
             GetVouchersInfo: { method: "GET", url: "/api/vouchers/getvouchersinfo/:id" },
             GetVoucherDetails: { method: "GET", url: "/api/vouchers/voucher/:id" },
             PostVouchers: { method: "POST", url: "/api/vouchers/new/:voucherAmount/:voucherFileId" },
-            DeleteVouchers: { method: "DELETE", url: "/api/vouchers/voucher/:id/delete" }
+            DeleteVouchers: { method: "DELETE", url: "/api/vouchers/voucher/:id/delete" },
+            GenerateOnlineVoucher: { method: "POST", url: "/api/vouchers/generateonlinevoucher/:voucherFileId/:mailAddress" }
         });
 }
