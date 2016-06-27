@@ -6,7 +6,7 @@
         <h2>Get your voucher</h2>
         <p>Just enter your email address and get your free voucher.</p>
         <form class="redeem-code-form" ng-submit="SendOnlineVoucher(GetValueAtIndex(5))">
-            <input type="text" placeholder="Email" ng-model="mailAddress" />
+            <input type="text" placeholder="Email" ng-model="onlineVoucher.OnlineVoucherEmail" />
             <br />
             <input class="button" type="submit" value="Send Voucher" />
         </form>

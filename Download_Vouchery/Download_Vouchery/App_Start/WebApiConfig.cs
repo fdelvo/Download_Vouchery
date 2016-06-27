@@ -105,9 +105,16 @@ namespace Download_Vouchery
 
             config.Routes.MapHttpRoute(
                 "GenerateOnlineVoucher",
-                "api/vouchers/generateonlinevoucher/{id}/{mailAddress}",
+                "api/vouchers/generateonlinevoucher/{id}",
                 new { controller = "Vouchers", action = "GenerateOnlineVoucher" },
                 new { httpMethod = new HttpMethodConstraint("POST") }
+            );
+
+            config.Routes.MapHttpRoute(
+                "Test",
+                "api/vouchers/test/{test}",
+                new { controller = "Vouchers", action = "Test" },
+                new { httpMethod = new HttpMethodConstraint("GET") }
             );
         }
     }

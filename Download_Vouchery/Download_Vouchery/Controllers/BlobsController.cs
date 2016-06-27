@@ -160,21 +160,16 @@ namespace Download_Vouchery.Controllers
         {
             // Get the voucher with the entered code
             var voucher = _db.Vouchers.FirstOrDefault(i => i.VoucherCode == voucherCode);
+            var onlineVoucher = _db.OnlineVouchers.FirstOrDefault(i => i.OnlineVoucherCode == voucherCode);
 
             // Cancel if voucher doesn't exist
-            if (voucher == null)
+            if (voucher == null && onlineVoucher == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
             }
 
             // Get the blob the voucher refers to
-            var blob = voucher.VoucherFileId;
-
-            // Check if the blob and the reference to the blob matches
-            if (blob.FileId != voucher.VoucherFileId.FileId)
-            {
-                return new HttpResponseMessage(HttpStatusCode.Forbidden);
-            }
+            var blob = voucher == null ? onlineVoucher.OnlineVoucherFileId : voucher.VoucherFileId;
 
             try
             {
@@ -204,12 +199,25 @@ namespace Download_Vouchery.Controllers
                     Size = result.BlobLength
                 };
 
-                voucher.VoucherRedeemed = true;
-                if (!check)
+                if (voucher != null)
                 {
-                    voucher.VoucherRedemptionCounter++;
+                    voucher.VoucherRedeemed = true;
+                    if (!check)
+                    {
+                        voucher.VoucherRedemptionCounter++;
+                    }
+                    voucher.VoucherRedemptionDate = DateTime.Now;
                 }
-                voucher.VoucherRedemptionDate = DateTime.Now;
+                else
+                {
+                    onlineVoucher.OnlineVoucherRedeemed = true;
+                    if (!check)
+                    {
+                        onlineVoucher.OnlineVoucherRedemptionCounter++;
+                    }
+                    onlineVoucher.OnlineVoucherRedemptionDate = DateTime.Now;
+
+                }
 
                 await _db.SaveChangesAsync();
 

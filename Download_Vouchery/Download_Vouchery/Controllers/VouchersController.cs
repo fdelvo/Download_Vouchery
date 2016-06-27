@@ -264,7 +264,7 @@ namespace Download_Vouchery.Controllers
         }
 
         [ResponseType(typeof(OnlineVoucher))]
-        public async Task<IHttpActionResult> GenerateOnlineVoucher(Guid id, string mailAddress)
+        public async Task<IHttpActionResult> GenerateOnlineVoucher(Guid id, [FromBody] OnlineVoucher postedOnlineVoucher)
         {
             var voucherFile = _db.BlobUploadModels.Find(id);
 
@@ -275,8 +275,8 @@ namespace Download_Vouchery.Controllers
             voucher.OnlineVoucherRedemptionDate = null;
             voucher.OnlineVoucherFileId = voucherFile;
             voucher.OnlineVoucherRedemptionCounter = 0;
-            voucher.OnlineVoucherEmail = mailAddress;
-
+            voucher.OnlineVoucherEmail = postedOnlineVoucher.OnlineVoucherEmail;
+            
             _db.OnlineVouchers.Add(voucher);
             await _db.SaveChangesAsync();
 
@@ -286,7 +286,7 @@ namespace Download_Vouchery.Controllers
             // Add the message properties.
 
             // Add multiple addresses to the To field.
-            var recipient = mailAddress;
+            var recipient = postedOnlineVoucher.OnlineVoucherEmail;
 
             myMessage.AddTo(recipient);
 
@@ -307,7 +307,12 @@ namespace Download_Vouchery.Controllers
             // Send the email.
             await transportWeb.DeliverAsync(myMessage);
 
-            return Ok("Your code has been sent to your mail address.");
+            return StatusCode(HttpStatusCode.Created);
+        }
+
+        public async Task<IHttpActionResult> Test(string test)
+        {
+            return Ok(test);
         }
 
         // DELETE: api/Vouchers/5

@@ -30,6 +30,7 @@
                     <li>
                         <a href="" ng-click="newVoucherForm = !newVoucherForm">Create vouchers</a>
                         <a href="" ng-click="DeleteFile(f.FileId)">Delete File</a>
+                        <a href="" ng-click="shareFile = !shareFile">Share File Online</a>
                     </li>
                     <li ng-show="newVoucherForm">
                         <form role="form" ng-submit="CreateVoucher(f.FileId, $index, f.FileName)">
@@ -37,6 +38,11 @@
                             <input class="button" type="submit" value="Create Voucher"/>
                             <p>Maximum amount per file: 10000</p>
                         </form>
+                    </li>
+                    <li ng-show="shareFile">
+                        <p>Copy the link to your file of embed the HTML somewhere.</p>
+                        <input type="text" value="http://localhost:54809/OnlineVoucher/Index/{{f.FileId}}"/>
+                    <input type="text" value="<div><a style=&quot;padding:15px;background-color:#f7ca18;color:#000000;text-decoration: none; font-weight: bold;box-shadow: 0 1px 4px 0 rgba(0,0,0,.37);&quot; onMouseOver=&quot;this.style.color=&apos;#ffffff&apos;;this.style.backgroundColor=&apos;#671aa6&apos;&quot; onMouseOut=&quot;this.style.color=&apos;#000000&apos;;this.style.backgroundColor=&apos;#f7ca18&apos;&quot; href=&quot;http://localhost:54809/OnlineVoucher/Index/{{f.FileId}}&quot; target=&quot;_blank&quot;>Get Your Voucher</a></div>" />
                     </li>
                 </ul>
             </div>

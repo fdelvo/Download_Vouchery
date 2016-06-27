@@ -14,7 +14,7 @@ function OnlineVoucherController($scope, $rootScope, $filter, $route, $http, Vou
     };
 
     $scope.SendOnlineVoucher = function(fileId) {
-        $scope.onlineVoucher.$GenerateOnlineVoucher({ voucherFileId: fileId, mailAddress: $scope.mailAddress },
+        $scope.onlineVoucher.$GenerateOnlineVoucher({ voucherFileId: fileId },
             function () {
                 $rootScope.status = "Voucher sent.";
             },
